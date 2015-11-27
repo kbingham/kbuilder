@@ -1,0 +1,10 @@
+ARCH:=arm
+
+## Target pack name of this board. Get this wrong and you can get dodgy behavour.
+# This needs to match from the targetpack
+
+BOARD?=b2020stxh416
+SOC?=stiH407
+
+
+DTB:=stih407-b2120.dtb
