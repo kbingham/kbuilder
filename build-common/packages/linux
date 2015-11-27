@@ -1,0 +1,45 @@
+LINUX_SRC:=$(BUILDSYS_ROOT)/linux
+LINUX_BUILD:=$(BUILDSYS_BUILD)/$(ARCH)/linux
+
+LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+.PHONY: linux
+
+linux: $(LINUX_SRC)
+
+## Obtain the sources:
+
+$(LINUX_SRC):
+	git clone $(LINUX_GIT_REPO) $(LINUX_SRC)
+
+CROSS_COMPILE?=arm-linux-gnueabi-
+
+LINUX_CMD := \
+	$(MAKE) -C $(LINUX_SRC) \
+		O=$(LINUX_BUILD) \
+		ARCH=$(ARCH) \
+		CROSS_COMPILE=$(CROSS_COMPILE) \
+		-j8
+
+
+.PHONY:	vmlinux zImage
+uImage vmlinux zImage dtbs modules: $(LINUX_BUILD)/.config
+	$(LINUX_CMD) $@
+
+# Linux knows how to make DTB's
+%.dtb: $(LINUX_SRC)
+	$(LINUX_CMD) $@
+
+menuconfig:
+	$(LINUX_CMD) $@
+
+linux_help: $(LINUX_SRC)
+	$(LINUX_CMD) help
+
+linux_kernel: zImage
+
+
+## Configuration and Build Preparation
+
+$(LINUX_BUILD)/.config:
+	$(LINUX_CMD) allnoconfig
