@@ -1,5 +1,5 @@
 include ../b2120-h407/config.in
 
-LINUX_SRC:=$(BUILDSYS_ROOT)/linux-3.1-st
+LINUX_SRC:=$(BUILDSYS_SOURCES)/linux-3.1-st
 
 CROSS_COMPILE=armv7-linux-
