@@ -13,6 +13,9 @@ include $(BUILDSYS_COMMON)/config.dirs
 
 BUILDSYS_TARGET_CONF ?= $(error This build system needs to be run from a configured directory)
 
+## Define a target name from the build configuration
+TARGET:=$(shell basename $(BUILDSYS_TARGET_CONF))
+
 ## Catch all rules
 
 all:

@@ -1,5 +1,5 @@
 LINUX_SRC?=$(BUILDSYS_SOURCES)/linux
-LINUX_BUILD:=$(BUILDSYS_BUILD)/$(ARCH)/linux
+LINUX_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/linux
 
 LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
