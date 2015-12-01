@@ -39,4 +39,4 @@ include $(BUILDSYS_TARGET_CONFIG_IN)
 
 PACKAGES:=$(BUILDSYS_COMMON)/packages
 
-include $(PACKAGES)/linux
+include $(PACKAGES)/*
