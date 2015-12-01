@@ -1,0 +1,4 @@
+du:
+	@echo "Disk Usage of Objects Directories"
+	@du -sh $(BUILDSYS_BUILD)/*/* 2>/dev/null || true
+	@df -h $(BUILDSYS_BUILD)
