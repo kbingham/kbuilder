@@ -11,8 +11,6 @@ linux: zImage
 $(LINUX_SRC):
 	git clone $(LINUX_GIT_REPO) $(LINUX_SRC)
 
-CROSS_COMPILE?=arm-linux-gnueabi-
-
 LINUX_CMD := \
 	$(MAKE) -C $(LINUX_SRC) \
 		O=$(LINUX_BUILD) \
