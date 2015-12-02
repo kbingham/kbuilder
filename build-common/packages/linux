@@ -36,6 +36,13 @@ linux_help: $(LINUX_SRC)
 linux_kernel: zImage
 
 
+## External Module support
+
+module:
+	$(LINUX_CMD) modules M=$(M)
+	$(LINUX_CMD) modules_install M=$(M)
+
+
 ## Configuration and Build Preparation
 
 menuconfig: $(LINUX_SRC)
