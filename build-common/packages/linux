@@ -4,8 +4,7 @@ LINUX_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/linux
 LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
 .PHONY: linux
-
-linux: $(LINUX_SRC)
+linux: zImage
 
 ## Obtain the sources:
 
