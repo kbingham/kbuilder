@@ -25,6 +25,8 @@ all:
 
 help:
 	@echo "Buildsystem Configuration"
+	@echo "ARCH : " $(ARCH)
+	@echo "SUBARCH : " $(SUBARCH)
 	@echo "BUILDSYS_TARGET_CONF: " $(BUILDSYS_TARGET_CONF)
 
 
@@ -36,6 +38,15 @@ $(BUILDSYS_TARGET_CONFIG_IN):
 	$(error $(BUILDSYS_TARGET_CONFIG_IN) required to provide target details)
 
 include $(BUILDSYS_TARGET_CONFIG_IN)
+
+
+## Pull in any architecture specific defaults
+
+include $(BUILDSYS_COMMON)/config.$(ARCH)
+
+ifneq ($(SUBARCH),)
+include $(BUILDSYS_COMMON)/config.$(SUBARCH)
+endif
 
 
 ## Package support rules

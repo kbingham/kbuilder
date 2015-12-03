@@ -1,4 +1,5 @@
 ARCH:=arm
+SUBARCH:=armv7
 
 ## Target pack name of this board. Get this wrong and you can get dodgy behavour.
 # This needs to match from the targetpack
