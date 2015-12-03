@@ -1,0 +1,24 @@
+
+NFSROOT:=10.0.2.2:/opt/STM/STLinux-2.4/devkit/armv7/target,tcp,v3
+
+## As long as the kernel is multiv7 - we can just run as a VExpress..
+qemu: vexpress-v2p-ca15-tc1.dtb
+	qemu-system-arm \
+		-kernel $(LINUX_BUILD)/arch/arm/boot/zImage \
+		-dtb $(LINUX_DTBS)/vexpress-v2p-ca15-tc1.dtb \
+		-M vexpress-a15 \
+		-smp 2 \
+		-m 1024 \
+		-append 'root=/dev/nfs nfsroot=$(NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
+		-nographic \
+		-s
+
+#		-sd vexpress-1G.img \
+#
+
+qemu-gdb:
+	arm-none-eabi-gdb \
+		$(LINUX_BUILD)/vmlinux \
+		-iex 'add-auto-load-safe-path $(LINUX_BUILD)' \
+		-iex 'target remote localhost:1234' \
+#		-iex 'lx-symbols'
