@@ -1,0 +1,10 @@
+ARCH:=arm
+
+LINUX_SRC:=$(BUILDSYS_SOURCES)/linux-3.10-st
+
+DEFCONFIG=versatile_defconfig
+
+ARMGDB:=/home/linuxembedded/linaro/lkd/lt-private-gdb-7.6/install/armv7/bin/armv7-linux-gdb
+
+# Linux-3.10 won't compile with a recent compiler! Use ST's :)
+CROSS_COMPILE=armv7-linux-
