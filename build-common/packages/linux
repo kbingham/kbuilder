@@ -60,6 +60,11 @@ menuconfig: $(LINUX_SRC)
 defconfig $(LINUX_BUILD)/.config:
 	$(MAKE) $(DEFCONFIG)
 
+# Local store of the config file for tracking
+kernel.config $(BUILDSYS_TARGET_CONF)/kernel.config: $(LINUX_BUILD)/.config
+	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
+	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
+
 # Exported Defines for external packages to utilise
 
 LINUX_DTBS:=$(LINUX_BUILD)/arch/arm/boot/dts/
