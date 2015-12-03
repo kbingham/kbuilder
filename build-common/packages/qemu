@@ -11,7 +11,11 @@ qemu: vexpress-v2p-ca15-tc1.dtb
 		-m 1024 \
 		-append 'root=/dev/nfs nfsroot=$(NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
 		-nographic \
+		$(QEMU_HALT) \
 		-s
+
+qemu_halted: QEMU_HALT:=-S
+qemu_halted: qemu
 
 #		-sd vexpress-1G.img \
 #
