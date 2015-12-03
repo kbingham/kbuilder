@@ -30,6 +30,8 @@ uImage vmlinux zImage dtbs modules: $(LINUX_BUILD)/.config
 %.dtb: $(LINUX_SRC)
 	$(LINUX_CMD) $@
 
+# Target Configurations should define their expected DTB
+dtb: $(DTB)
 
 linux_help: $(LINUX_SRC)
 	$(LINUX_CMD) help
@@ -57,4 +59,9 @@ menuconfig: $(LINUX_SRC)
 
 defconfig $(LINUX_BUILD)/.config:
 	$(MAKE) $(DEFCONFIG)
+
+# Exported Defines for external packages to utilise
+
+LINUX_DTBS:=$(LINUX_BUILD)/arch/arm/boot/dts/
+LINUX_VMLINUX:=$(LINUX_BUILD)/vmlinux
 
