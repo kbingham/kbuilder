@@ -55,5 +55,6 @@ menuconfig: $(LINUX_SRC)
 	@echo " [CONFIG] Configuring from $@"
 	$(LINUX_CMD) $@
 
-$(LINUX_BUILD)/.config:
-	$(LINUX_CMD) allnoconfig
+defconfig $(LINUX_BUILD)/.config:
+	$(MAKE) $(DEFCONFIG)
+
