@@ -47,17 +47,19 @@ module:
 
 
 ## Configuration and Build Preparation
+$(LINUX_BUILD):
+	@mkdir -p $@
 
-menuconfig: $(LINUX_SRC)
+menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	$(LINUX_CMD) $@
 	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
 	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
-%_defconfig: $(LINUX_SRC)
+%_defconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	@echo " [CONFIG] Configuring from $@"
 	$(LINUX_CMD) $@
 
-defconfig $(LINUX_BUILD)/.config:
+defconfig $(LINUX_BUILD)/.config: $(LINUX_BUILD)
 	$(MAKE) $(DEFCONFIG)
 
 # Local store of the config file for tracking
