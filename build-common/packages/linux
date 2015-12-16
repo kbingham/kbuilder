@@ -19,11 +19,12 @@ LINUX_CMD := \
 		O=$(LINUX_BUILD) \
 		ARCH=$(ARCH) \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
+		INSTALL_MOD_PATH=$(TARGET_MOD_DIR) \
 		-j$(J)
 
 
 .PHONY:	vmlinux zImage
-uImage vmlinux zImage dtbs modules: $(LINUX_BUILD)/.config
+uImage vmlinux zImage dtbs modules modules_install: $(LINUX_BUILD)/.config
 	$(LINUX_CMD) $@
 
 # Linux knows how to make DTB's
