@@ -4,7 +4,7 @@ LINUX_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/linux
 LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
 .PHONY: linux
-linux: zImage
+linux: $(LINUX_BUILD)/.config zImage
 
 ## Obtain the sources:
 
@@ -60,7 +60,8 @@ menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	@echo " [CONFIG] Configuring from $@"
 	$(LINUX_CMD) $@
 
-defconfig $(LINUX_BUILD)/.config: $(LINUX_BUILD)
+defconfig $(LINUX_BUILD)/.config: | $(LINUX_SRC) $(LINUX_BUILD)
+	@echo "Making DEFCONFIG to create $(LINUX_BUILD)/.config from $(DEFCONFIG)"
 	$(MAKE) $(DEFCONFIG)
 
 # Local store of the config file for tracking
