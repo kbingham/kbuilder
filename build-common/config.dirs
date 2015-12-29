@@ -1,3 +1,8 @@
+# Source Extraction Root
 BUILDSYS_SOURCES	:= $(BUILDSYS_ROOT)/sources
+
+# Build object root
 BUILDSYS_BUILD 		:= $(BUILDSYS_ROOT)/objects
+
+# Installation root, for packaging
 BUILDSYS_INSTALL 	:= $(BUILDSYS_ROOT)/install
