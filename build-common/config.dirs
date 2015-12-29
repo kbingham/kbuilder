@@ -6,3 +6,6 @@ BUILDSYS_BUILD 		:= $(BUILDSYS_ROOT)/objects
 
 # Installation root, for packaging
 BUILDSYS_INSTALL 	:= $(BUILDSYS_ROOT)/install
+
+# Locally used tool root
+BUILDSYS_HOST		:= $(BUILDSYS_ROOT)/host

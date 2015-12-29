@@ -7,6 +7,9 @@ BUILDSYS_COMMON := $(BUILDSYS_ROOT)/build-common
 
 include $(BUILDSYS_COMMON)/config.dirs
 
+# Put our Buildsystem installables on to the path
+export PATH:=$(BUILDSYS_HOST)/usr/bin/:$(PATH)
+
 ##
 ## BUILDSYS_TARGET_CONF should already be defined to locate Target Variables
 ##
