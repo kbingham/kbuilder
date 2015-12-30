@@ -42,6 +42,7 @@ debug-core:
 	gdb $(ARMGDB) core
 
 gdb-armgdb:
+	@pidof $(ARMGDB) || (echo "Could not detect a PID for $(ARMGDB)" && false)
 	@echo "Warning: Disabling PTrace Scope Security"
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 	gdb -p $(shell pidof $(ARMGDB)) \
