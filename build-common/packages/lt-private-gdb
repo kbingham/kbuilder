@@ -1,0 +1,27 @@
+# Force our build of GDB onto the path to be used
+#GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb/
+GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-lkd-only/
+#GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-7.6/
+#GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-7.6-patchwork/
+
+GDB_LKD_INSTALL:=$(GDB_LKD_BUILD)/install/armv7/bin/
+export PATH:=$(GDB_LKD_INSTALL):$(PATH)
+
+ARMGDB=$(shell PATH=$(PATH) which armv7-linux-gdb)
+
+arm-gdb-version:
+	@echo $(ARMGDB)
+	@echo $(shell PATH=$(PATH) which $(ARMGDB))
+	$(ARMGDB) -v
+
+#BINUTILS_GDB_SRC:=$(GDB_LKD_BUILD)/gdb
+BINUTILS_GDB_SRC:=/home/linuxembedded/linaro/lkd/lt-private-gdb-7.6/gdb/
+TESTSUITE_LKD:=$(BINUTILS_GDB_SRC)/testsuite/lkd.base
+
+helloworld: M:=$(TESTSUITE_LKD)/modules/helloworld
+helloworld: module
+
+helloworld2: M:=$(TESTSUITE_LKD)/modules/helloworld2
+helloworld2: module
+
+lkdmods: helloworld helloworld2
