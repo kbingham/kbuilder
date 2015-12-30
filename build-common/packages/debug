@@ -1,0 +1,11 @@
+edit_buildsys:
+	vim $(BUILDSYS_COMMON)
+path:
+	@echo $(PATH)
+
+env:
+	@env
+
+shellenv:
+	@echo "Entering a shell environment"
+	bash
