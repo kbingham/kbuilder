@@ -1,12 +1,23 @@
 
 NFSROOT:=10.0.2.2:/opt/STM/STLinux-2.4/devkit/armv7/target,tcp,v3
 
+# Vexpress Targets
+# vexpress-a9  : vexpress-v2p-ca9.dts
+# vexpress-a15 : vexpress-v2p-ca15-tc1.dtb
+
+QEMU_MACHINE?=vexpress-a15
+QEMU_DTB?=vexpress-v2p-ca15-tc1.dtb
+
+qemu_arma9: QEMU_MACHINE:=vexpress-a9
+qemu_arma9: QEMU_DTB:=vexpress-v2p-ca9.dtb
+qemu_arma9: qemu_arm
+
 ## As long as the kernel is multiv7 - we can just run as a VExpress..
-qemu: vexpress-v2p-ca15-tc1.dtb
+qemu_arm: $(QEMU_DTB)
 	qemu-system-arm \
 		-kernel $(LINUX_BUILD)/arch/arm/boot/zImage \
-		-dtb $(LINUX_DTBS)/vexpress-v2p-ca15-tc1.dtb \
-		-M vexpress-a15 \
+		-dtb $(LINUX_DTBS)/$(QEMU_DTB) \
+		-M $(QEMU_MACHINE) \
 		-smp 2 \
 		-m 1024 \
 		-append 'root=/dev/nfs nfsroot=$(NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
@@ -15,7 +26,7 @@ qemu: vexpress-v2p-ca15-tc1.dtb
 		-s
 
 qemu_halted: QEMU_HALT:=-S
-qemu_halted: qemu
+qemu_halted: qemu_arm
 
 #		-sd vexpress-1G.img \
 #
