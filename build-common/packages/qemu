@@ -12,13 +12,15 @@ qemu_arma9: QEMU_MACHINE:=vexpress-a9
 qemu_arma9: QEMU_DTB:=vexpress-v2p-ca9.dtb
 qemu_arma9: qemu_arm
 
+QEMU_CORES?=2
+
 ## As long as the kernel is multiv7 - we can just run as a VExpress..
 qemu_arm: $(QEMU_DTB)
 	qemu-system-arm \
 		-kernel $(LINUX_BUILD)/arch/arm/boot/zImage \
 		-dtb $(LINUX_DTBS)/$(QEMU_DTB) \
 		-M $(QEMU_MACHINE) \
-		-smp 2 \
+		-smp $(QEMU_CORES) \
 		-m 1024 \
 		-append 'root=/dev/nfs nfsroot=$(NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
 		-nographic \
