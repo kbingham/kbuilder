@@ -63,11 +63,18 @@ menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 defconfig $(LINUX_BUILD)/.config: | $(LINUX_SRC) $(LINUX_BUILD)
 	@echo "Making DEFCONFIG to create $(LINUX_BUILD)/.config from $(DEFCONFIG)"
 	$(MAKE) $(DEFCONFIG)
+	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
+	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
 # Local store of the config file for tracking
 kernel.config $(BUILDSYS_TARGET_CONF)/kernel.config: $(LINUX_BUILD)/.config
 	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
 	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
+
+# Update .config with the kernel.config in the target configuration
+linux_restore_config:
+	@echo "Copying $(BUILDSYS_TARGET_CONF)/kernel.config -> $(LINUX_BUILD)/.config"
+	@cp $(BUILDSYS_TARGET_CONF)/kernel.config $(LINUX_BUILD)/.config
 
 # Exported Defines for external packages to utilise
 
