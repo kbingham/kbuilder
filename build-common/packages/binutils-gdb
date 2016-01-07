@@ -1,0 +1,38 @@
+## Build a binutils-gdb package
+
+BINUTILS_SRC?=$(BUILDSYS_SOURCES)/binutils-gdb
+BINUTILS_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/binutils-gdb
+BINUTILS_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/binutils-gdb
+
+$(BINUTILS_BUILD) $(BINUTILS_INSTALL):
+	@mkdir -p $@
+
+binutils-gdb: binutils-gdb-build binutils-gdb-install-host
+
+# Configure packages
+binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: $(BINUTILS_SRC) $(BINUTILS_BUILD) $(BINUTILS_SRC)/configure
+	cd $(BINUTILS_BUILD) && \
+	CC="gcc -m32" \
+	$(BINUTILS_SRC)/configure \
+		--prefix=/usr \
+		--target=arm-elf-linux \
+		--program-prefix=armv7-linux- \
+		--disable-nls \
+                --enable-linux-kernel-aware \
+		--enable-shtdi \
+		--enable-tui \
+		--with-python=yes \
+		--with-sysroot=/opt/STM/STLinux-2.4/devkit/armv7/target \
+		--with-separate-debug-dir=/opt/STM/STLinux-2.4/devkit/armv7/target/usr/lib/debug
+
+binutils-gdb-build: $(BINUTILS_BUILD)/Makefile
+	$(MAKE) -j 8 -C $(BINUTILS_BUILD)
+
+binutils-gdb-install: $(BINUILS_INSTALL)
+	$(MAKE) -j 8 -C $(BINUTILS_BUILD) install DESTDIR=$(BINUTILS_INSTALL)
+
+binutils-gdb-install-host: BINUTILS_INSTALL=$(BUILDSYS_HOST)
+binutils-gdb-install-host: binutils-gdb-install
+
+binutils-gdb-distclean:
+	rm -rf $(BINUTILS_BUILD)
