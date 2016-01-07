@@ -1,5 +1,10 @@
+# Qemu Target Support
 
-NFSROOT:=10.0.2.2:/opt/STM/STLinux-2.4/devkit/armv7/target,tcp,v3
+NFSROOT?=/opt/STM/STLinux-2.4/devkit/armv7/target
+NFSROOT_OPTIONS?=,tcp,v3
+
+QEMU_SERVERIP:=10.0.2.2
+QEMU_NFSROOT:=$(QEMU_SERVERIP):$(NFSROOT)$(NFSROOT_OPTIONS)
 
 # Vexpress Targets
 # vexpress-a9  : vexpress-v2p-ca9.dts
@@ -22,7 +27,7 @@ qemu_arm: $(QEMU_DTB)
 		-M $(QEMU_MACHINE) \
 		-smp $(QEMU_CORES) \
 		-m 1024 \
-		-append 'root=/dev/nfs nfsroot=$(NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
+		-append 'root=/dev/nfs nfsroot=$(QEMU_NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
 		-nographic \
 		$(QEMU_HALT) \
 		-s
