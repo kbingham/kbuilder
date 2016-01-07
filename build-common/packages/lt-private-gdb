@@ -1,11 +1,11 @@
 # Force our build of GDB onto the path to be used
 #GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb/
-GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-lkd-only/
+#GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-lkd-only/
 #GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-7.6/
 #GDB_LKD_BUILD:=/home/linuxembedded/linaro/lkd/lt-private-gdb-7.6-patchwork/
 
-GDB_LKD_INSTALL:=$(GDB_LKD_BUILD)/install/armv7/bin/
-export PATH:=$(GDB_LKD_INSTALL):$(PATH)
+#GDB_LKD_INSTALL:=$(GDB_LKD_BUILD)/install/armv7/bin/
+#export PATH:=$(GDB_LKD_INSTALL):$(PATH)
 
 ARMGDB=$(shell PATH=$(PATH) which armv7-linux-gdb)
 
