@@ -1,0 +1,5 @@
+ARCH:=x86_64
+
+GDB_ARMGDB_OPTS+=-ex 'b internal_error'
+GDB_ARMGDB_OPTS+=-ex 'b warning'
+
