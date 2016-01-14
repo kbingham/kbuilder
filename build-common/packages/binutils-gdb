@@ -9,21 +9,24 @@ $(BINUTILS_BUILD) $(BINUTILS_INSTALL):
 
 binutils-gdb: binutils-gdb-build binutils-gdb-install-host
 
+BINUTILS_CONF_EXT_arm:= \
+		--with-sysroot=/opt/STM/STLinux-2.4/devkit/armv7/target \
+		--with-separate-debug-dir=/opt/STM/STLinux-2.4/devkit/armv7/target/usr/lib/debug
+
 # Configure packages
 binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: $(BINUTILS_SRC) $(BINUTILS_BUILD) $(BINUTILS_SRC)/configure
 	cd $(BINUTILS_BUILD) && \
 	CC="gcc -m32" \
 	$(BINUTILS_SRC)/configure \
 		--prefix=/usr \
-		--target=arm-elf-linux \
-		--program-prefix=armv7-linux- \
+		--target=$(ARCH)-elf-linux \
+		--program-prefix=$(ARCH)-linux- \
 		--disable-nls \
                 --enable-linux-kernel-aware \
 		--enable-shtdi \
 		--enable-tui \
 		--with-python=yes \
-		--with-sysroot=/opt/STM/STLinux-2.4/devkit/armv7/target \
-		--with-separate-debug-dir=/opt/STM/STLinux-2.4/devkit/armv7/target/usr/lib/debug
+		$(BINUTILS_CONF_EXT_$(ARCH))
 
 binutils-gdb-build: $(BINUTILS_BUILD)/Makefile
 	$(MAKE) -j 8 -C $(BINUTILS_BUILD)
