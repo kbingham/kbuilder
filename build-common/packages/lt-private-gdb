@@ -7,7 +7,7 @@
 #GDB_LKD_INSTALL:=$(GDB_LKD_BUILD)/install/armv7/bin/
 #export PATH:=$(GDB_LKD_INSTALL):$(PATH)
 
-ARMGDB=$(shell PATH=$(PATH) which armv7-linux-gdb)
+ARMGDB=$(shell PATH=$(PATH) which $(ARCH)-linux-gdb)
 
 arm-gdb-version:
 	@echo $(ARMGDB)
