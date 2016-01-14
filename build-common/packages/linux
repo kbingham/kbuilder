@@ -24,7 +24,7 @@ LINUX_CMD := \
 
 
 .PHONY:	vmlinux zImage
-uImage vmlinux zImage dtbs modules modules_install: $(LINUX_BUILD)/.config
+uImage vmlinux bzImage zImage dtbs modules modules_install: $(LINUX_BUILD)/.config
 	$(LINUX_CMD) $@
 
 # Linux knows how to make DTB's
