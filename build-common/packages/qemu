@@ -6,6 +6,14 @@ NFSROOT_OPTIONS?=,tcp,v3
 QEMU_SERVERIP:=10.0.2.2
 QEMU_NFSROOT:=$(QEMU_SERVERIP):$(NFSROOT)$(NFSROOT_OPTIONS)
 
+#
+## http://www.commandlinefu.com/commands/view/7299/find-an-unused-unprivileged-tcp-port
+#
+
+QEMU_GDBSERVER_PORT=$(shell port=32768; while netstat -atn | grep -q :$$port; do port=$$(expr $$port + 1); done; echo $$port)
+QEMU_GDBSERVER_PORT_FILE=qemu_gdbserver_port
+QEMU_GDBSERVER_PORT_ID=$(shell cat $(QEMU_GDBSERVER_PORT_FILE))
+
 # Vexpress Targets
 # vexpress-a9  : vexpress-v2p-ca9.dts
 # vexpress-a15 : vexpress-v2p-ca15-tc1.dtb
@@ -15,12 +23,13 @@ QEMU_DTB?=vexpress-v2p-ca15-tc1.dtb
 
 qemu_arma9: QEMU_MACHINE:=vexpress-a9
 qemu_arma9: QEMU_DTB:=vexpress-v2p-ca9.dtb
-qemu_arma9: qemu_arm
+qemu_arma9: qemu-system-arm
 
 QEMU_CORES?=2
 
 ## As long as the kernel is multiv7 - we can just run as a VExpress..
-qemu_arm: $(QEMU_DTB)
+qemu-system-arm: $(QEMU_DTB)
+	echo $(QEMU_GDBSERVER_PORT) > $(QEMU_GDBSERVER_PORT_FILE)
 	qemu-system-arm \
 		-kernel $(LINUX_BUILD)/arch/arm/boot/zImage \
 		-dtb $(LINUX_DTBS)/$(QEMU_DTB) \
@@ -30,10 +39,10 @@ qemu_arm: $(QEMU_DTB)
 		-append 'root=/dev/nfs nfsroot=$(QEMU_NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
 		-nographic \
 		$(QEMU_HALT) \
-		-s
+		-gdb tcp::$(QEMU_GDBSERVER_PORT)
 
 qemu_halted: QEMU_HALT:=-S
-qemu_halted: qemu_arm
+qemu_halted: qemu-system-arm
 
 #		-sd vexpress-1G.img \
 ARMGDB?=arm-none-eabi-gdb \
@@ -42,7 +51,7 @@ qemu-gdb:
 	$(ARMGDB) \
 		$(LINUX_BUILD)/vmlinux \
 		-iex 'add-auto-load-safe-path $(LINUX_BUILD)' \
-		-iex 'target remote localhost:1234' \
+		-iex 'target remote localhost:$(QEMU_GDBSERVER_PORT_ID)' \
 #		-iex 'lx-symbols'
 
 debug-core:
