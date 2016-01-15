@@ -27,6 +27,8 @@ qemu_arma9: qemu-system-arm
 
 QEMU_CORES?=2
 
+qemu-run: qemu-system-$(ARCH)
+
 ## As long as the kernel is multiv7 - we can just run as a VExpress..
 qemu-system-arm: $(QEMU_DTB)
 	echo $(QEMU_GDBSERVER_PORT) > $(QEMU_GDBSERVER_PORT_FILE)
