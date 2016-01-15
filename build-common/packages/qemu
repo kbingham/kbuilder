@@ -53,7 +53,7 @@ qemu-gdb:
 	$(ARMGDB) \
 		$(LINUX_BUILD)/vmlinux \
 		-iex 'add-auto-load-safe-path $(LINUX_BUILD)' \
-		-iex 'target remote localhost:$(QEMU_GDBSERVER_PORT_ID)' \
+		-ex 'target remote localhost:$(QEMU_GDBSERVER_PORT_ID)' \
 #		-iex 'lx-symbols'
 
 debug-core:
