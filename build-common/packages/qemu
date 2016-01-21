@@ -50,6 +50,8 @@ qemu_halted: qemu-system-arm
 ARMGDB?=arm-none-eabi-gdb \
 
 qemu-gdb:
+	# Link the Kernel VMLinux locally for python lx-symbols
+	ln -f -s $(LINUX_BUILD)/vmlinux
 	$(ARMGDB) \
 		$(LINUX_BUILD)/vmlinux \
 		-iex 'add-auto-load-safe-path $(LINUX_BUILD)' \

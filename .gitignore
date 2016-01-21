@@ -2,4 +2,5 @@ host
 objects
 sources
 install
+vmlinux
 qemu_gdbserver_port
