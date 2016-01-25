@@ -83,3 +83,5 @@ linux_restore_config:
 LINUX_DTBS:=$(LINUX_BUILD)/arch/arm/boot/dts/
 LINUX_VMLINUX:=$(LINUX_BUILD)/vmlinux
 
+linux-distclean:
+	rm -r $(LINUX_BUILD)
