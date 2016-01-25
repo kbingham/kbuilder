@@ -53,7 +53,7 @@ module:
 $(LINUX_BUILD):
 	@mkdir -p $@
 
-menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
+menuconfig: $(LINUX_SRC) $(LINUX_BUILD) | $(LINUX_BUILD)/.config
 	$(LINUX_CMD) $@
 	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
 	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
@@ -61,20 +61,18 @@ menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 %_defconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	@echo " [CONFIG] Configuring from $@"
 	$(LINUX_CMD) $@
+	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
-defconfig $(LINUX_BUILD)/.config: | $(LINUX_SRC) $(LINUX_BUILD)
+# Whilst this rule 'creates' a $(LINUX_BUILD)/.config, that is not this target aim
+defconfig $(BUILDSYS_TARGET_CONF)/kernel.config: | $(LINUX_SRC) $(LINUX_BUILD)
 	@echo "Making DEFCONFIG to create $(LINUX_BUILD)/.config from $(DEFCONFIG)"
 	$(MAKE) $(DEFCONFIG)
 	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
 	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
-# Local store of the config file for tracking
-kernel.config $(BUILDSYS_TARGET_CONF)/kernel.config: $(LINUX_BUILD)/.config
-	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
-	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
 # Update .config with the kernel.config in the target configuration
-linux_restore_config:
+$(LINUX_BUILD)/.config linux_restore_config: $(BUILDSYS_TARGET_CONF)/kernel.config
 	@echo "Copying $(BUILDSYS_TARGET_CONF)/kernel.config -> $(LINUX_BUILD)/.config"
 	@cp $(BUILDSYS_TARGET_CONF)/kernel.config $(LINUX_BUILD)/.config
 
