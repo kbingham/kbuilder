@@ -1,1 +1,2 @@
 DEFCONFIG ?= x86_64_defconfig
+LINUX_DEFAULT_TARGET ?= bzImage

@@ -3,8 +3,10 @@ LINUX_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/linux
 
 LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
+LINUX_DEFAULT_TARGET?=zImage
+
 .PHONY: linux
-linux: $(LINUX_BUILD)/.config zImage
+linux: $(LINUX_BUILD)/.config $(LINUX_DEFAULT_TARGET)
 
 ## Obtain the sources:
 
