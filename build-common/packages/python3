@@ -1,0 +1,38 @@
+## Build a python3 package
+
+PYTHON3_SRC?=$(BUILDSYS_SOURCES)/python3
+PYTHON3_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/python3
+PYTHON3_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/python3
+PYTHON3_GIT?=https://github.com/python/cpython.git
+
+$(PYTHON3_SRC):
+	git clone $(PYTHON3_GIT) $(PYTHON3_SRC)
+
+$(PYTHON3_BUILD) $(PYTHON3_INSTALL):
+	@mkdir -p $@
+
+python3: python3-build python3-install-host
+
+# Configure packages
+python3-configure $(PYTHON3_BUILD)/Makefile: | $(PYTHON3_SRC) $(PYTHON3_BUILD) $(PYTHON3_SRC)/configure
+	cd $(PYTHON3_BUILD) && \
+	$(PYTHON3_SRC)/configure \
+		--prefix=/usr
+
+# Configure packages
+python3-configure-help: | $(PYTHON3_SRC) $(PYTHON3_BUILD) $(PYTHON3_SRC)/configure
+			cd $(PYTHON3_BUILD) && \
+			$(PYTHON3_SRC)/configure \
+			 	--help
+
+python3-build: $(PYTHON3_BUILD)/Makefile
+	$(MAKE) -j 8 -C $(PYTHON3_BUILD)
+
+python3-install: $(BINUILS_INSTALL)
+	$(MAKE) -j 8 -C $(PYTHON3_BUILD) install DESTDIR=$(PYTHON3_INSTALL)
+
+python3-install-host: PYTHON3_INSTALL=$(BUILDSYS_HOST)
+python3-install-host: python3-install
+
+python3-distclean:
+	rm -rf $(PYTHON3_BUILD)
