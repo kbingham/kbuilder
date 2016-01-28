@@ -14,6 +14,12 @@ BINUTILS_CONF_EXT_arm:= \
 		--with-separate-debug-dir=/opt/STM/STLinux-2.4/devkit/armv7/target/usr/lib/debug
 
 # Configure packages
+
+binutils-gdb-configure-help: | $(BINUTILS_SRC) $(BINUTILS_BUILD) $(BINUTILS_SRC)/configure
+	cd $(BINUTILS_BUILD) && \
+	$(BINUTILS_SRC)/configure \
+		--help
+
 binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_BUILD) $(BINUTILS_SRC)/configure
 	cd $(BINUTILS_BUILD) && \
 	CC="gcc -m32" \
