@@ -7,6 +7,13 @@ BINUTILS_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/binutils-gdb
 $(BINUTILS_BUILD) $(BINUTILS_INSTALL):
 	@mkdir -p $@
 
+BINUTILS_GIT?=git://sourceware.org/git/binutils-gdb.git
+BINUTILS_BRANCH?=master
+
+$(BINUTILS_SRC):
+	git clone $(BINUTILS_GIT) -b $(BINUTILS_BRANCH) $(BINUTILS_SRC)
+
+
 binutils-gdb: binutils-gdb-build binutils-gdb-install-host
 
 BINUTILS_CONF_EXT_arm:= \
