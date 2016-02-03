@@ -1,0 +1,23 @@
+set pagination off
+
+echo \n\ndmesg:\n\n
+lx-dmesg
+
+echo \n\nlsmod\n
+lx-lsmod
+
+echo \n\nps\n\n
+lx-ps
+
+echo \n\n/proc/cmdline:\n\n
+lx-cmdline
+
+echo \n\n/proc/version:\n\n
+lx-version
+
+echo \n\n/proc/ioports:\n\n
+lx-ioports
+
+echo \n\n/proc/iomem:\n\n
+lx-iomem
+

@@ -1,0 +1,6 @@
+set pagination off
+python linux.awareness_target.load()
+maintenance print target-stack
+info threads
+
+set pagination on
