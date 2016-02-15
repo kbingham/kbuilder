@@ -1,2 +1,4 @@
 DEFCONFIG ?= x86_64_defconfig
 LINUX_DEFAULT_TARGET ?= bzImage
+
+QEMU_NFS_ROOT?=/opt/root/ubuntu-vivid.$(ARCH)

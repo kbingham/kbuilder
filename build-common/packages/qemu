@@ -67,3 +67,14 @@ gdb-armgdb:
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 	gdb -p $(shell pidof $(ARMGDB)) \
 		$(GDB_ARMGDB_OPTS)
+
+qemu-system-x86_64 qemu-system-i386:
+	echo $(QEMU_GDBSERVER_PORT) > qemu_gdbserver_port
+	$@ \
+		-kernel $(LINUX_BUILD)/arch/x86/boot/bzImage \
+		-smp $(QEMU_CORES) \
+		-m 1024 \
+		-append 'root=/dev/nfs nfsroot=/opt/root/ubuntu-vivid.$(ARCH) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyS0 devtmpfs.mount=0' \
+		-nographic \
+		$(QEMU_HALT) \
+		-gdb tcp::$(QEMU_GDBSERVER_PORT)
