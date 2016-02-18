@@ -1,0 +1,12 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+
+UBUNTUFS_VERSION=vivid
+UBUNTUFS=/opt/root/ubuntu-$(UBUNTU_VERSION).$(ARCH)
+
+TARGET_MOD_DIR:=$(UBUNTUFS)
+NFSROOT=$(UBUNTUFS)
+
+GDB_ARMGDB_OPTS+=-ex 'b internal_error'
+GDB_ARMGDB_OPTS+=-ex 'b warning'
+
