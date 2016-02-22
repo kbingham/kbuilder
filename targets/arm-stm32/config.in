@@ -3,3 +3,6 @@ SUBARCH:=armv7
 DEFCONFIG?=stm32_defconfig
 LINUX_DEFAULT_TARGET=xipImage
 DTB=stm32f429-disco.dtb
+
+# Pull in target specific packages
+-include packages/*
