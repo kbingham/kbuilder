@@ -1,0 +1,19 @@
+openocd-connect:
+	openocd \
+		-c "gdb_port 3333" \
+		-f board/stm32f429discovery.cfg \
+		-f interface/stlink-v2-1.cfg \
+		-c "init" \
+		-c "reset init"
+
+#		-c "telnet_port 4444" \
+
+openocd-gdb:
+	rm -f core
+	ulimit -c unlimited && \
+	../../host/usr/bin/arm-linux-gdb \
+		$(LINUX_BUILD)/vmlinux \
+		--eval-command="target remote localhost:3333"
+
+gdb-core:
+	gdb ../../host/usr/bin/arm-linux-gdb core

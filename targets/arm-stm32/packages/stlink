@@ -1,0 +1,16 @@
+
+
+DTB_FILE=$(LINUX_BUILD)/arch/arm/boot/dts/$(DTB)
+KERNEL_FILE=$(LINUX_BUILD)/arch/arm/boot/$(LINUX_DEFAULT_TARGET)
+
+stlink-flash-dtb: dtb
+	st-flash --reset write $(DTB_FILE) 0x08004000
+
+stlink-flash-kernel:
+	st-flash --reset write $(KERNEL_FILE) 0x08008000
+
+stlink-flash: stlink-flash-dtb stlink-flash-kernel
+
+stlink-help:
+	@echo DTB_FILE: $(DTB_FILE)
+	@echo KERNEL_FILE: $(KERNEL_FILE)

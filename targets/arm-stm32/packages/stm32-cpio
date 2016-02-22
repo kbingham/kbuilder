@@ -1,0 +1,20 @@
+STM32_CPIO_URL=http://elinux.org/images/5/51/
+STM32_CPIO_FILE=Stm32_mini_rootfs.cpio
+
+STM32_CPIO=$(BUILDSYS_BUILD)/$(STM32_CPIO_FILE)
+
+cpio $(STM32_CPIO):
+	echo "Downloading a pre-built userspace CPIO (RAMFS)"
+	wget -P $(BUILDSYS_BUILD) $(STM32_CPIO_URL)/$(STM32_CPIO_FILE).bz2
+	bunzip2 $(STM32_CPIO).bz2
+	$(LINUX_SRC)/scripts/config --file kernel.config \
+        	--enable GDB_SCRIPTS \
+        	--set-val INITRAMFS_ROOT_UID 0 \
+        	--set-val INITRAMFS_ROOT_GID 0 \
+        	--enable BLK_DEV_INITRD \
+        	--set-str INITRAMFS_SOURCE $(STM32_CPIO) \
+        	--enable RD_GZIP \
+        	--enable INITRAMFS_COMPRESSION_GZIP
+
+# Tie in our CPIO to the linux dependancy chain
+linux: | $(STM32_CPIO)
