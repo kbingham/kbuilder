@@ -1,0 +1,2 @@
+ARCH:=um
+LINUX_DEFAULT_TARGET=vmlinux
