@@ -32,8 +32,11 @@ LINUX_CMD := \
 		-j$(J)
 
 
+linux-%: $(LINUX_BUILD)/.config
+	$(LINUX_CMD) $*
+
 .PHONY:	vmlinux zImage
-uImage vmlinux bzImage zImage xipImage dtbs modules modules_install: $(LINUX_BUILD)/.config
+uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: $(LINUX_BUILD)/.config
 	$(LINUX_CMD) $@
 
 # Linux knows how to make DTB's
