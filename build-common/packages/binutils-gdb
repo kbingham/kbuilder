@@ -41,7 +41,7 @@ binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_
 		$(BINUTILS_CONF_EXT_$(ARCH))
 
 binutils-gdb-build: $(BINUTILS_BUILD)/Makefile
-	$(MAKE) -j 8 -C $(BINUTILS_BUILD)
+	$(MAKE) -j $(J) -C $(BINUTILS_BUILD)
 
 binutils-gdb-install: $(BINUILS_INSTALL)
 	$(MAKE) -j 8 -C $(BINUTILS_BUILD) install DESTDIR=$(BINUTILS_INSTALL)
