@@ -16,10 +16,17 @@ $(LINUX_SRC):
 
 J?=8
 
+## Linux uses a different naming format than everyone else for ARM64
+ifeq ($(ARCH),aarch64)
+LINUX_ARCH=arm64
+else
+LINUX_ARCH=$(ARCH)
+endif
+
 LINUX_CMD := \
 	$(MAKE) -C $(LINUX_SRC) \
 		O=$(LINUX_BUILD) \
-		ARCH=$(ARCH) \
+		ARCH=$(LINUX_ARCH) \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		INSTALL_MOD_PATH=$(TARGET_MOD_DIR) \
 		-j$(J)
