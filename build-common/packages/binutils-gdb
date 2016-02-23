@@ -29,7 +29,6 @@ binutils-gdb-configure-help: | $(BINUTILS_SRC) $(BINUTILS_BUILD) $(BINUTILS_SRC)
 
 binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_BUILD) $(BINUTILS_SRC)/configure
 	cd $(BINUTILS_BUILD) && \
-	CC="gcc -m32" \
 	$(BINUTILS_SRC)/configure \
 		--prefix=/usr \
 		--target=$(ARCH)-linux \
