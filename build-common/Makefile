@@ -59,3 +59,7 @@ include $(PACKAGES)/*
 # Put our Buildsystem installables on to the path
 export PATH:=$(BUILDSYS_HOST)/usr/bin/:$(PATH)
 
+
+## Parallel Build Support
+
+J?=$(shell nproc)
