@@ -34,7 +34,7 @@ binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_
 		--target=$(ARCH)-linux \
 		--program-prefix=$(ARCH)-linux- \
 		--disable-nls \
-                --enable-linux-kernel-aware \
+		--enable-linux-kernel-aware \
 		--enable-shtdi \
 		--enable-tui \
 		--with-python=yes \
