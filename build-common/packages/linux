@@ -20,7 +20,7 @@ J?=8
 ifeq ($(ARCH),aarch64)
 LINUX_ARCH=arm64
 else
-LINUX_ARCH=$(ARCH)
+LINUX_ARCH?=$(ARCH)
 endif
 
 LINUX_CMD := \

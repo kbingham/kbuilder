@@ -1,4 +1,5 @@
-ARCH:=um
+ARCH:=$(shell uname -m)
+LINUX_ARCH:=um
 LINUX_DEFAULT_TARGET=vmlinux
 
 
