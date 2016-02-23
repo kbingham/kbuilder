@@ -1,2 +1,6 @@
 ARCH:=um
 LINUX_DEFAULT_TARGET=vmlinux
+
+
+uml-run:
+	$(GDB) $(LINUX_BUILD)/vmlinux
