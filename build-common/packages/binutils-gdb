@@ -32,7 +32,7 @@ binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_
 	CC="gcc -m32" \
 	$(BINUTILS_SRC)/configure \
 		--prefix=/usr \
-		--target=$(ARCH)-elf-linux \
+		--target=$(ARCH)-linux \
 		--program-prefix=$(ARCH)-linux- \
 		--disable-nls \
                 --enable-linux-kernel-aware \
