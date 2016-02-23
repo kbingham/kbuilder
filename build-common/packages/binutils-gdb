@@ -52,3 +52,12 @@ binutils-gdb-install-host: binutils-gdb-install
 
 binutils-gdb-distclean:
 	rm -rf $(BINUTILS_BUILD)
+
+
+## Helpers to use the built and installed GDB
+
+GDB?=$(shell PATH=$(PATH) which $(ARCH)-linux-gdb)
+
+gdb-version:
+	@echo "Using GDB from : $(GDB)"
+	$(GDB) --version
