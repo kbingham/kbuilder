@@ -1,1 +1,2 @@
 DEFCONFIG ?= defconfig
+LINUX_DEFAULT_TARGET=vmlinux
