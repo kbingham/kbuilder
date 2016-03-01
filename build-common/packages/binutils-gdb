@@ -43,11 +43,16 @@ binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_
 binutils-gdb-build: $(BINUTILS_BUILD)/Makefile
 	$(MAKE) -j $(J) -C $(BINUTILS_BUILD)
 
+binutils-gdb-%: $(BINUTILS_BUILD)/Makefile
+	$(MAKE) -C $(BINUTILS_BUILD) $*
+
+
 binutils-gdb-install: $(BINUILS_INSTALL)
 	$(MAKE) -j 8 -C $(BINUTILS_BUILD) install DESTDIR=$(BINUTILS_INSTALL)
 
 binutils-gdb-install-host: BINUTILS_INSTALL=$(BUILDSYS_HOST)
 binutils-gdb-install-host: binutils-gdb-install
+	@: # Empty rule to prevent calling install-host in binutils
 
 binutils-gdb-distclean:
 	rm -rf $(BINUTILS_BUILD)
