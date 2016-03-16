@@ -63,9 +63,16 @@ qemu-system-aarch64:
 		$(QEMU_HALT) \
 		-gdb tcp::$(QEMU_GDBSERVER_PORT)
 
+qemu-gdbserver: GDBSERVER:=gdbserver localhost:3456
+qemu-gdbserver: qemu-gdb
+
+gdb-qemu-gdbserver:
+	gdb $(ARMGDB) -ex 'target remote localhost:3456'
+
 qemu-gdb:
 	# Link the Kernel VMLinux locally for python lx-symbols
 	ln -f -s $(LINUX_BUILD)/vmlinux
+	$(GDBSERVER) \
 	$(ARMGDB) \
 		$(LINUX_BUILD)/vmlinux \
 		-iex 'add-auto-load-safe-path $(LINUX_BUILD)' \
