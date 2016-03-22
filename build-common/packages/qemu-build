@@ -16,7 +16,7 @@ $(QEMU_SRC):
 qemu: qemu-build qemu-install-host
 
 # Configure packages
-qemu-configure $(QEMU_BUILD)/Makefile: $(QEMU_SRC) $(QEMU_BUILD) $(QEMU_SRC)/configure
+qemu-configure $(QEMU_BUILD)/Makefile: | $(QEMU_SRC) $(QEMU_BUILD) $(QEMU_SRC)/configure
 	cd $(QEMU_BUILD) && \
 	$(QEMU_SRC)/configure \
 		--prefix=/usr
