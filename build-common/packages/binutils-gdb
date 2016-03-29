@@ -40,8 +40,9 @@ binutils-gdb-configure $(BINUTILS_BUILD)/Makefile: | $(BINUTILS_SRC) $(BINUTILS_
 		--with-python=yes \
 		$(BINUTILS_CONF_EXT_$(ARCH))
 
+# -O0 will break build on development branch for ARM, in gas/config/tc-arm.c
 binutils-gdb-build: $(BINUTILS_BUILD)/Makefile
-	$(MAKE) -j $(J) -C $(BINUTILS_BUILD)
+	$(MAKE) -j $(J) -C $(BINUTILS_BUILD) #CFLAGS='-g3 -O0 -fsanitize=undefined'
 
 binutils-gdb-%: $(BINUTILS_BUILD)/Makefile
 	$(MAKE) -C $(BINUTILS_BUILD) $*
