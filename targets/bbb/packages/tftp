@@ -1,0 +1,6 @@
+
+TFTP_SRV?=/var/lib/tftpboot/
+
+tftp:
+	cp -v $(LINUX_BUILD)/arch/arm/boot/*Image $(TFTP_SRV)
+	cp -v $(LINUX_BUILD)/arch/arm/boot/dts/*.dtb $(TFTP_SRV)
