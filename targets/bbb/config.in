@@ -6,5 +6,7 @@ DTB=am335x-boneblack.dtb
 LINUX_DEFAULT_TARGET=uImage
 LINUX_BUILD_EXTRA=LOADADDR=0x80008000
 
+TARGET_MOD_DIR:=/opt/root/beagle
+
 # Pull in target specific packages
 -include packages/*
