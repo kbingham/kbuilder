@@ -1,0 +1,17 @@
+UBOOT_IPADDR=192.168.0.13
+UBOOT_SERVERIP=$(shell wimip -l)
+
+uboot-args:
+	@echo "setenv ipaddr $(UBOOT_IPADDR)"
+	@echo "setenv serverip $(UBOOT_SERVERIP)"
+	@echo "tftpboot 0x80F80000 am335x-boneblack.dtb"
+	@echo "tftpboot 0x80007FC0 uImage"
+	@#echo "setenv bootargs console=ttyO0,115200n8 root=/dev/mmcblk0p2 ro rootfstype=ext4 rootwait"
+	@echo "run netargs"
+
+uboot-netboot-args:
+	@echo "\
+run findfdt; \
+setenv rootpath /opt/root/beagle; \
+run netboot;\
+	"
