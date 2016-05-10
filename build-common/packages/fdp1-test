@@ -1,0 +1,44 @@
+## Build a fdp1-test package
+
+FDP1_TEST_SRC?=$(BUILDSYS_SOURCES)/fdp1-test
+FDP1_TEST_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/fdp1-test
+FDP1_TEST_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/fdp1-test
+
+FDP1_TEST_GIT=git@github.com:kbingham/fdp1test.git
+FDP1_TEST_GIT=https://github.com/kbingham/fdp1test.git
+FDP1_TEST_BRANCH?=master
+
+$(FDP1_TEST_BUILD) $(FDP1_TEST_INSTALL):
+	@mkdir -p $@
+
+$(FDP1_TEST_SRC):
+	git clone $(FDP1_TEST_GIT) -b $(FDP1_TEST_BRANCH) $@
+
+fdp1-test: fdp1-test-build fdp1-test-install-host
+
+$(FDP1_TEST_SRC)/configure: $(FDP1_TEST_SRC)
+	cd $(FDP1_TEST_SRC) && \
+	autoreconf -vfi
+
+fdp1-test-configure $(FDP1_TEST_BUILD)/Makefile: | $(FDP1_TEST_SRC) $(FDP1_TEST_BUILD) $(FDP1_TEST_SRC)/configure
+	cd $(FDP1_TEST_BUILD) && \
+	$(FDP1_TEST_SRC)/configure \
+		--prefix=/usr
+
+fdp1-test-build: $(FDP1_TEST_BUILD)/Makefile
+	$(MAKE) -j 8 -C $(FDP1_TEST_BUILD)
+
+fdp1-test-install: $(FDP1_TEST_INSTALL)
+	$(MAKE) -j 8 -C $(FDP1_TEST_BUILD) install DESTDIR=$(FDP1_TEST_INSTALL)
+
+fdp1-test-install-host: FDP1_TEST_INSTALL=$(BUILDSYS_HOST)
+fdp1-test-install-host: fdp1-test-install
+
+fdp1-test-install-target: FDP1_TEST_INSTALL=$(ROOTFS)
+fdp1-test-install-target: fdp1-test-install
+
+fdp1-test-distclean:
+	rm -rf $(FDP1_TEST_BUILD)
+
+fdp1-help:
+	@
