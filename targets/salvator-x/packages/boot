@@ -1,0 +1,9 @@
+
+TFTP_SRV?=/var/lib/tftpboot/salvator
+
+tftp:
+	cp -v $(LINUX_BUILD)/arch/arm64/boot/*Image $(TFTP_SRV)
+	cp -v $(LINUX_BUILD)/arch/arm64/boot/dts/*/*.dtb $(TFTP_SRV)
+
+uboot:
+	echo "";

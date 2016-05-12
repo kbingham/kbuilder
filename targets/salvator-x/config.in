@@ -1,0 +1,15 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=Image
+
+UBUNTUFS_VERSION=vivid
+UBUNTUFS=/opt/root/ubuntu-$(UBUNTUFS_VERSION).$(ARCH)
+
+TARGET_MOD_DIR:=$(UBUNTUFS)
+NFSROOT=$(UBUNTUFS)
+
+GDB_ARMGDB_OPTS+=-ex 'b internal_error'
+GDB_ARMGDB_OPTS+=-ex 'b warning'
+
+DTB=renesas/r8a7795-salvator-x.dts
+LINUX_SRC=$(BUILDSYS_SOURCES)/renesas-drivers
