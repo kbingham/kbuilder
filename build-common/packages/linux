@@ -89,7 +89,7 @@ $(LINUX_BUILD)/.config linux_restore_config: $(BUILDSYS_TARGET_CONF)/kernel.conf
 
 # Exported Defines for external packages to utilise
 
-LINUX_DTBS:=$(LINUX_BUILD)/arch/arm/boot/dts/
+LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/
 LINUX_VMLINUX:=$(LINUX_BUILD)/vmlinux
 
 linux-distclean:
