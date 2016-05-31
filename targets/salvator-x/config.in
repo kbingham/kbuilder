@@ -20,3 +20,5 @@ DTB=renesas/r8a7795-salvator-x.dtb
 
 # Geert Uytterhoeven
 # LINUX_SRC=$(BUILDSYS_SOURCES)/renesas-drivers
+
+-include autotools.cross

@@ -1,0 +1,15 @@
+
+## Autotools Cross Compiling
+#AT_PATH:=/opt/STM/STLinux-2.4.kieran.brokenboot/devkit/armv7/bin/
+AT_PATH:=/home/linuxembedded/iob/fdp1/buildroot/salvator/host/usr/bin
+AT_TARGET_HOST=aarch64-linux-gnu
+
+
+# Env
+AT_ENVIRONMENT = PATH=$(AT_PATH):$(PATH)
+#AT_ENVIRONMENT += PKG_CONFIG_PATH:
+
+#DEP
+TARGET_HOST=$(AT_TARGET_HOST)
+
+
