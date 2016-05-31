@@ -9,3 +9,5 @@ TARGET:=$(shell basename $(BUILDSYS_TARGET_CONF))
 include $(BUILDSYS_ROOT)/build-common/Makefile
 
 -include packages/*
+
+all salvator: fdp1-test-install-target linux dtb tftp
