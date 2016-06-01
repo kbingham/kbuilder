@@ -1,13 +1,29 @@
 
 ## Autotools Cross Compiling
 #AT_PATH:=/opt/STM/STLinux-2.4.kieran.brokenboot/devkit/armv7/bin/
-AT_PATH:=/home/linuxembedded/iob/fdp1/buildroot/salvator/host/usr/bin
+
+BUILDROOT=/home/linuxembedded/iob/fdp1/buildroot/salvator
+BUILDROOT_SYSROOT=$(BUILDROOT)/host/usr/aarch64-buildroot-linux-gnu/sysroot
+# (gcc ) -print-sysroot
+
+AT_PATH:=$(BUILDROOT)/host/usr/bin
 AT_TARGET_HOST=aarch64-linux-gnu
+AT_SYSROOT=$(shell $(BUILDROOT)/host/usr/bin/$(AT_TARGET_HOST)-gcc -print-sysroot)
 
 
 # Env
-AT_ENVIRONMENT = PATH=$(AT_PATH):$(PATH)
-#AT_ENVIRONMENT += PKG_CONFIG_PATH:
+AT_ENVIRONMENT = export PATH=$(AT_PATH):$(PATH)
+AT_ENVIRONMENT += CROSS_COMPILE=$(AT_TARGET_HOST)-
+AT_ENVIRONMENT += PKG_CONFIG_DIR=
+AT_ENVIRONMENT += PKG_CONFIG_SYSROOT_DIR=$(AT_SYSROOT)
+AT_ENVIRONMENT += PKG_CONFIG_LIBDIR=$(AT_SYSROOT)/usr/lib/pkgconfig:$(AT_SYSROOT)/usr/share/pkgconfig
+
+AT_ENVIRONMENT += &&
+
+
+at_environment:
+	@echo $(AT_ENVIRONMENT)
+	@$(AT_ENVIRONMENT) which pkg-config
 
 #DEP
 TARGET_HOST=$(AT_TARGET_HOST)
