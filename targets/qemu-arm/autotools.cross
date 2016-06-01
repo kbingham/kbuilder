@@ -1,0 +1,14 @@
+
+## Autotools Cross Compiling
+#AT_PATH:=/opt/STM/STLinux-2.4.kieran.brokenboot/devkit/armv7/bin/
+AT_PATH:=
+AT_TARGET_HOST=arm-linux-gnueabihf
+
+
+# Env
+AT_ENVIRONMENT = PATH=$(AT_PATH):$(PATH)
+
+#DEP
+TARGET_HOST=$(AT_TARGET_HOST)
+
+

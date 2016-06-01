@@ -5,6 +5,8 @@ BUILDSYS_TARGET_CONF := $(abspath $(PWD))
 
 TARGET:=$(shell basename $(BUILDSYS_TARGET_CONF))
 
+-include autotools.cross
+
 # Pull in the main makefile for packages
 include $(BUILDSYS_ROOT)/build-common/Makefile
 
