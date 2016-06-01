@@ -1,2 +1,2 @@
 DEFCONFIG ?= defconfig
-LINUX_DEFAULT_TARGET=vmlinux
+LINUX_DEFAULT_TARGET ?= linux-Image
