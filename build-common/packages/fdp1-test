@@ -14,9 +14,9 @@ $(FDP1_TEST_BUILD) $(FDP1_TEST_INSTALL):
 $(FDP1_TEST_SRC):
 	git clone $(FDP1_TEST_GIT) -b $(FDP1_TEST_BRANCH) $@
 
-fdp1-test: fdp1-test-build fdp1-test-install-host
+fdp1-test: fdp1-test-build fdp1-test-install-target
 
-$(FDP1_TEST_SRC)/configure: $(FDP1_TEST_SRC)
+$(FDP1_TEST_SRC)/configure: | $(FDP1_TEST_SRC)
 	$(AT_ENVIRONMENT) \
 	cd $(FDP1_TEST_SRC) && \
 	autoreconf -vfi
