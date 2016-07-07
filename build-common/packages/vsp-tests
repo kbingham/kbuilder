@@ -1,0 +1,41 @@
+## Build the vsp-tests package
+
+VSP_TESTS_SRC?=$(BUILDSYS_SOURCES)/vsp-tests
+VSP_TESTS_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/vsp-tests
+
+VSP_TESTS_BUILD=$(VSP_TESTS_SRC)
+
+VSP_TESTS_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/vsp-tests
+
+VSP_TESTS_GIT=git://git.ideasonboard.org/renesas/vsp-tests.git
+VSP_TESTS_BRANCH?=master
+
+
+$(VSP_TESTS_INSTALL):
+	@mkdir -p $@
+
+$(VSP_TESTS_SRC):
+	git clone $(VSP_TESTS_GIT) -b $(VSP_TESTS_BRANCH) $@
+
+vsp-tests: vsp-tests-build vsp-tests-install-target
+
+vsp-tests-build: | $(VSP_TESTS_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -C $(VSP_TESTS_BUILD)
+
+vsp-tests-install: $(VSP_TESTS_INSTALL)
+	@mkdir -p $(VSP_TESTS_INSTALL)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -C $(VSP_TESTS_BUILD) install INSTALL_DIR=$(VSP_TESTS_INSTALL)
+
+vsp-tests-install-host: VSP_TESTS_INSTALL=$(BUILDSYS_HOST)
+vsp-tests-install-host: vsp-tests-install
+
+vsp-tests-install-target: VSP_TESTS_INSTALL=$(ROOTFS)/root/vsp-tests/
+vsp-tests-install-target: vsp-tests-install
+
+vsp-tests-distclean:
+	rm -rf $(VSP_TESTS_BUILD)
+
+vsp-tests-help:
+	@:
