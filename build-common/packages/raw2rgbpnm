@@ -1,0 +1,42 @@
+## Build the raw2rgbpnm package
+
+RAW2RGBPNM_SRC?=$(BUILDSYS_SOURCES)/raw2rgbpnm
+RAW2RGBPNM_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/raw2rgbpnm
+
+RAW2RGBPNM_BUILD=$(RAW2RGBPNM_SRC)
+
+RAW2RGBPNM_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/raw2rgbpnm
+
+RAW2RGBPNM_GIT=git://git.retiisi.org.uk/~sailus/raw2rgbpnm.git
+RAW2RGBPNM_BRANCH?=master
+
+
+$(RAW2RGBPNM_INSTALL):
+	@mkdir -p $@
+
+$(RAW2RGBPNM_SRC):
+	git clone $(RAW2RGBPNM_GIT) -b $(RAW2RGBPNM_BRANCH) $@
+
+$(RAW2RGBPNM_BUILD)/Makefile: | $(RAW2RGBPNM_SRC)
+
+raw2rgbpnm: raw2rgbpnm-build raw2rgbpnm-install-target
+
+raw2rgbpnm-build: | $(RAW2RGBPNM_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -C $(RAW2RGBPNM_BUILD)
+
+raw2rgbpnm-install: $(RAW2RGBPNM_INSTALL)
+	$(AT_ENVIRONMENT) \
+	cp $(RAW2RGBPNM_BUILD)/raw2rgbpnm $(RAW2RGBPNM_INSTALL)
+
+raw2rgbpnm-install-host: RAW2RGBPNM_INSTALL=$(BUILDSYS_HOST)
+raw2rgbpnm-install-host: raw2rgbpnm-install
+
+raw2rgbpnm-install-target: RAW2RGBPNM_INSTALL=$(ROOTFS)/usr/bin/
+raw2rgbpnm-install-target: raw2rgbpnm-install
+
+raw2rgbpnm-distclean:
+	rm -rf $(RAW2RGBPNM_BUILD)
+
+raw2rgbpnm-help:
+	@:
