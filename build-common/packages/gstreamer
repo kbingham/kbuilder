@@ -1,0 +1,50 @@
+## Build the gstreamer package
+
+GSTREAMER_SRC?=$(BUILDSYS_SOURCES)/gstreamer
+GSTREAMER_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/gstreamer
+GSTREAMER_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/gstreamer
+
+GSTREAMER_GIT=git://anongit.freedesktop.org/gstreamer/gstreamer
+GSTREAMER_BRANCH?=master
+
+
+$(GSTREAMER_BUILD) $(GSTREAMER_INSTALL):
+	@mkdir -p $@
+
+$(GSTREAMER_SRC):
+	git clone $(GSTREAMER_GIT) -b $(GSTREAMER_BRANCH) $@
+
+gstreamer: gstreamer-build gstreamer-install-target
+
+gstreamer-configure $(GSTREAMER_BUILD)/Makefile $(GSTREAMER_SRC)/configure: $(GSTREAMER_SRC) $(GSTREAMER_BUILD)
+	$(AT_ENVIRONMENT) \
+	cd $(GSTREAMER_BUILD) && \
+	$(GSTREAMER_SRC)/autogen.sh \
+		--disable-gtk-doc \
+		--host=$(AT_TARGET_HOST)
+
+gstreamer-configure-help: | $(GSTREAMER_SRC) $(GSTREAMER_BUILD) $(GSTREAMER_SRC)/configure
+	$(AT_ENVIRONMENT) \
+	cd $(GSTREAMER_BUILD) && \
+	$(GSTREAMER_SRC)/configure \
+		--help
+
+gstreamer-build: | $(GSTREAMER_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(GSTREAMER_BUILD)
+
+gstreamer-install: $(GSTREAMER_INSTALL)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(GSTREAMER_BUILD) install DESTDIR=$(GSTREAMER_INSTALL)
+
+gstreamer-install-sysroot: GSTREAMER_INSTALL=$(AT_SYSROOT)
+gstreamer-install-sysroot: gstreamer-install
+
+gstreamer-install-target: GSTREAMER_INSTALL=$(ROOTFS)
+gstreamer-install-target: gstreamer-install
+
+gstreamer-distclean:
+	rm -rf $(GSTREAMER_BUILD)
+
+gstreamer-help:
+	@
