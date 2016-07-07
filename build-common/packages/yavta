@@ -1,0 +1,40 @@
+## Build the yavta package
+
+YAVTA_SRC?=$(BUILDSYS_SOURCES)/yavta
+YAVTA_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/yavta
+
+YAVTA_BUILD=$(YAVTA_SRC)
+
+YAVTA_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/yavta
+
+YAVTA_GIT=git://git.ideasonboard.org/yavta.git
+YAVTA_BRANCH?=master
+
+
+$(YAVTA_BUILD) $(YAVTA_INSTALL):
+	@mkdir -p $@
+
+$(YAVTA_SRC):
+	git clone $(YAVTA_GIT) -b $(YAVTA_BRANCH) $@
+
+yavta: yavta-build yavta-install-target
+
+yavta-build: | $(YAVTA_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -C $(YAVTA_BUILD)
+
+yavta-install: $(YAVTA_INSTALL)
+	$(AT_ENVIRONMENT) \
+	install -m 0755 -D $(YAVTA_BUILD)/yavta $(YAVTA_INSTALL)/usr/bin/yavta
+
+yavta-install-host: YAVTA_INSTALL=$(BUILDSYS_HOST)
+yavta-install-host: yavta-install
+
+yavta-install-target: YAVTA_INSTALL=$(ROOTFS)
+yavta-install-target: yavta-install
+
+yavta-distclean:
+	rm -rf $(YAVTA_BUILD)
+
+yavta-help:
+	@:
