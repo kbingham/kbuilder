@@ -1,0 +1,41 @@
+## Build a v4l2-utils package
+
+V4L2_UTILS_SRC?=$(BUILDSYS_SOURCES)/v4l2-utils
+V4L2_UTILS_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/v4l2-utils
+V4L2_UTILS_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/v4l2-utils
+
+V4L2_UTILS_GIT=http://git.linuxtv.org/cgit.cgi/v4l-utils.git
+V4L2_UTILS_BRANCH?=master
+
+$(V4L2_UTILS_BUILD) $(V4L2_UTILS_INSTALL):
+	@mkdir -p $@
+
+$(V4L2_UTILS_SRC):
+	git clone $(V4L2_UTILS_GIT) -b $(V4L2_UTILS_BRANCH) $@
+
+v4l2-utils: v4l2-utils-build v4l2-utils-install-host
+
+# Configure packages
+
+$(V4L2_UTILS_SRC)/configure: $(V4L2_UTILS_SRC)
+	cd $(V4L2_UTILS_SRC) && \
+	./bootstrap.sh
+	#autoreconf -vfi
+
+
+v4l2-utils-configure $(V4L2_UTILS_BUILD)/Makefile: | $(V4L2_UTILS_SRC) $(V4L2_UTILS_BUILD) $(V4L2_UTILS_SRC)/configure
+	cd $(V4L2_UTILS_BUILD) && \
+	$(V4L2_UTILS_SRC)/configure \
+		--prefix=/usr
+
+v4l2-utils-build: $(V4L2_UTILS_BUILD)/Makefile
+	$(MAKE) -j 8 -C $(V4L2_UTILS_BUILD)
+
+v4l2-utils-install: $(BINUILS_INSTALL)
+	$(MAKE) -j 8 -C $(V4L2_UTILS_BUILD) install DESTDIR=$(V4L2_UTILS_INSTALL)
+
+v4l2-utils-install-host: V4L2_UTILS_INSTALL=$(BUILDSYS_HOST)
+v4l2-utils-install-host: v4l2-utils-install
+
+v4l2-utils-distclean:
+	rm -rf $(V4L2_UTILS_BUILD)
