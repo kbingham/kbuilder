@@ -11,7 +11,7 @@ YAVTA_GIT=git://git.ideasonboard.org/yavta.git
 YAVTA_BRANCH?=master
 
 
-$(YAVTA_BUILD) $(YAVTA_INSTALL):
+$(YAVTA_INSTALL):
 	@mkdir -p $@
 
 $(YAVTA_SRC):
