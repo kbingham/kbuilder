@@ -19,7 +19,7 @@ $(YAVTA_SRC):
 
 yavta: yavta-build yavta-install-target
 
-yavta-build: | $(YAVTA_BUILD)/Makefile
+yavta-build: | $(YAVTA_SRC)
 	$(AT_ENVIRONMENT) \
 	$(MAKE) -C $(YAVTA_BUILD)
 
