@@ -92,5 +92,11 @@ $(LINUX_BUILD)/.config linux_restore_config: $(BUILDSYS_TARGET_CONF)/kernel.conf
 LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/
 LINUX_VMLINUX:=$(LINUX_BUILD)/vmlinux
 
+# Extra helpers
+ADDR2LINE=$(shell which $(CROSS_COMPILE)addr2line)
+linux-addr2line:
+	$(ADDR2LINE) -e $(LINUX_VMLINUX)
+
+
 linux-distclean:
 	rm -r $(LINUX_BUILD)
