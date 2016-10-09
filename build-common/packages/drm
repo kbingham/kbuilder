@@ -1,0 +1,52 @@
+## Build the drm package
+
+DRM_SRC?=$(BUILDSYS_SOURCES)/drm
+DRM_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/drm
+DRM_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/drm
+
+DRM_GIT=git://anongit.freedesktop.org/mesa/drm
+DRM_GIT=https://anongit.freedesktop.org/git/mesa/drm.git
+
+DRM_BRANCH?=master
+
+
+$(DRM_BUILD) $(DRM_INSTALL):
+	@mkdir -p $@
+
+$(DRM_SRC):
+	git clone $(DRM_GIT) -b $(DRM_BRANCH) $@
+
+drm: drm-build drm-install-target
+
+drm-configure $(DRM_BUILD)/Makefile $(DRM_SRC)/configure: $(DRM_SRC) $(DRM_BUILD)
+	$(AT_ENVIRONMENT) \
+	cd $(DRM_BUILD) && \
+	$(DRM_SRC)/autogen.sh \
+		--disable-gtk-doc \
+		--host=$(AT_TARGET_HOST)
+
+drm-configure-help: | $(DRM_SRC) $(DRM_BUILD) $(DRM_SRC)/configure
+	$(AT_ENVIRONMENT) \
+	cd $(DRM_BUILD) && \
+	$(DRM_SRC)/configure \
+		--help
+
+drm-build: | $(DRM_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(DRM_BUILD)
+
+drm-install: $(DRM_INSTALL)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(DRM_BUILD) install DESTDIR=$(DRM_INSTALL)
+
+drm-install-sysroot: DRM_INSTALL=$(AT_SYSROOT)
+drm-install-sysroot: drm-install
+
+drm-install-target: DRM_INSTALL=$(ROOTFS)
+drm-install-target: drm-install
+
+drm-distclean:
+	rm -rf $(DRM_BUILD)
+
+drm-help:
+	@
