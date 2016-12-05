@@ -1,0 +1,49 @@
+## Build the kmscube package
+
+KMSCUBE_SRC?=$(BUILDSYS_SOURCES)/kmscube
+KMSCUBE_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/kmscube
+KMSCUBE_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/kmscube
+
+KMSCUBE_GIT=https://github.com/robclark/kmscube.git
+KMSCUBE_BRANCH?=master
+
+$(KMSCUBE_BUILD) $(KMSCUBE_INSTALL):
+	@mkdir -p $@
+
+$(KMSCUBE_SRC):
+	git clone $(KMSCUBE_GIT) -b $(KMSCUBE_BRANCH) $@
+
+kmscube: kmscube-build kmscube-install-target
+
+kmscube-configure $(KMSCUBE_BUILD)/Makefile $(KMSCUBE_SRC)/configure: | $(KMSCUBE_SRC) $(KMSCUBE_BUILD)
+	$(AT_ENVIRONMENT) \
+	cd $(KMSCUBE_BUILD) && \
+	$(KMSCUBE_SRC)/autogen.sh \
+		--prefix=/usr \
+		--host=$(AT_TARGET_HOST)
+
+kmscube-configure-help: | $(KMSCUBE_SRC) $(KMSCUBE_BUILD) $(KMSCUBE_SRC)/configure
+	$(AT_ENVIRONMENT) \
+	cd $(KMSCUBE_BUILD) && \
+	$(KMSCUBE_SRC)/configure \
+		--help
+
+kmscube-build: | $(KMSCUBE_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(KMSCUBE_BUILD)
+
+kmscube-install: $(KMSCUBE_INSTALL)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(KMSCUBE_BUILD) install DESTDIR=$(KMSCUBE_INSTALL)
+
+kmscube-install-sysroot: KMSCUBE_INSTALL=$(AT_SYSROOT)
+kmscube-install-sysroot: kmscube-install
+
+kmscube-install-target: KMSCUBE_INSTALL=$(ROOTFS)
+kmscube-install-target: kmscube-install
+
+kmscube-distclean:
+	rm -rf $(KMSCUBE_BUILD)
+
+kmscube-help:
+	@
