@@ -30,7 +30,7 @@ kmsxx-configure $(KMSXX_BUILD)/Makefile: | kmsxx-src $(KMSXX_BUILD)
 		-DCMAKE_TOOLCHAIN_FILE=/home/linuxembedded/iob/fdp1/buildroot/salvator/host/usr/share/buildroot/toolchainfile.cmake \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=Debug \
-		-DKMSXX_ENABLE_KMSCUBE=OFF \
+		-DKMSXX_ENABLE_KMSCUBE=ON \
 		-DKMSXX_ENABLE_PYTHON=ON \
 		-DBUILD_SHARED_LIBS=ON
 
