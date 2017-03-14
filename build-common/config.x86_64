@@ -1,4 +1,20 @@
+## x86_64 generic configuration
+
+# Generic Target Definitions
+
 DEFCONFIG ?= x86_64_defconfig
 LINUX_DEFAULT_TARGET ?= bzImage
 
-QEMU_NFS_ROOT?=/opt/root/ubuntu-vivid.$(ARCH)
+
+# Filesystem definitions
+
+UBUNTU_FILESYSTEM=/opt/root/ubuntu-xenial.$(ARCH)
+INSTALL_MOD_PATH?=$(UBUNTU_FILESYSTEM)
+TARGET_MOD_DIR?=$(UBUNTU_FILESYSTEM)
+QEMU_NFS_ROOT?=$(UBUNTU_FILESYSTEM)
+
+
+# Qemu / GDB handling
+
+ARMGDB:=gdb
+HOSTGDB:=gdb
