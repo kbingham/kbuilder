@@ -42,7 +42,7 @@ uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: $
 
 # Linux knows how to make DTB's
 %.dtb: $(LINUX_SRC)
-	$(LINUX_CMD) $@
+	$(LINUX_CMD) W=1 $@
 
 # Target Configurations should define their expected DTB
 dtb: $(DTB)
