@@ -1,9 +1,10 @@
 
-TFTP_SRV?=/var/lib/tftpboot/salvator
+#TFTP_SRV?=/var/lib/tftpboot/salvator
+TFTP_SRV?=pi.nakedgeek.co.uk:/srv/tftp/salvator
 
 tftp:
-	cp -v $(LINUX_BUILD)/arch/arm64/boot/*Image $(TFTP_SRV)
-	cp -v $(LINUX_BUILD)/arch/arm64/boot/dts/*/*.dtb $(TFTP_SRV)
+	scp $(LINUX_BUILD)/arch/arm64/boot/*Image $(TFTP_SRV)
+	scp $(LINUX_BUILD)/arch/arm64/boot/dts/*/*.dtb $(TFTP_SRV)
 
 uboot:
 	echo "";
