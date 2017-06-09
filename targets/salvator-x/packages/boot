@@ -6,5 +6,8 @@ tftp:
 	scp $(LINUX_BUILD)/arch/arm64/boot/*Image $(TFTP_SRV)
 	scp $(LINUX_BUILD)/arch/arm64/boot/dts/*/*.dtb $(TFTP_SRV)
 
+tftp-local: TFTP_SRV:=/var/lib/tftpboot/salvator/
+tftp-local: tftp
+
 uboot:
 	echo "";
