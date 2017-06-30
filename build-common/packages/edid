@@ -1,0 +1,39 @@
+## Build the edid package
+
+EDID_SRC?=$(BUILDSYS_SOURCES)/edid
+EDID_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/edid
+
+EDID_BUILD=$(EDID_SRC)
+
+EDID_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/edid
+
+EDID_GIT=git://git.ideasonboard.com/xilinx/edid.git
+EDID_BRANCH?=master
+
+$(EDID_INSTALL):
+	@mkdir -p $@
+
+$(EDID_SRC):
+	git clone $(EDID_GIT) -b $(EDID_BRANCH) $@
+
+edid: edid-build edid-install-target
+
+edid-build: | $(EDID_SRC)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -C $(EDID_BUILD)
+
+edid-install: $(EDID_INSTALL)
+	$(AT_ENVIRONMENT) \
+	install -m 0755 -D $(EDID_BUILD)/edid $(EDID_INSTALL)/usr/bin/edid
+
+edid-install-host: EDID_INSTALL=$(BUILDSYS_HOST)
+edid-install-host: edid-install
+
+edid-install-target: EDID_INSTALL=$(ROOTFS)
+edid-install-target: edid-install
+
+edid-distclean:
+	rm -rf $(EDID_BUILD)
+
+edid-help:
+	@:
