@@ -1,0 +1,63 @@
+## Build a gst-plugins-bad package
+
+GST_PLUGINS_BAD_SRC?=$(BUILDSYS_SOURCES)/gst-plugins-bad
+GST_PLUGINS_BAD_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/gst-plugins-bad
+GST_PLUGINS_BAD_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/gst-plugins-bad
+
+GST_PLUGINS_BAD_GIT=git://anongit.freedesktop.org/git/gstreamer/gst-plugins-bad
+GST_PLUGINS_BAD_BRANCH?=master
+
+
+APT_PACKAGE_DEPENDENCIES += autopoint
+
+$(GST_PLUGINS_BAD_BUILD) $(GST_PLUGINS_BAD_INSTALL):
+	@mkdir -p $@
+
+$(GST_PLUGINS_BAD_SRC):
+	git clone $(GST_PLUGINS_BAD_GIT) -b $(GST_PLUGINS_BAD_BRANCH) $@
+
+gst-plugins-bad: gst-plugins-bad-build gst-plugins-bad-install-target
+
+$(GST_PLUGINS_BAD_SRC)/configure: | $(GST_PLUGINS_BAD_SRC)
+	$(AT_ENVIRONMENT) \
+	cd $(GST_PLUGINS_BAD_BUILD) && \
+	$(GST_PLUGINS_BAD_SRC)/autogen.sh \
+		--disable-gtk-doc \
+		--prefix=/usr \
+		--enable-v4l2-probe \
+		--host=$(AT_TARGET_HOST) \
+
+gst-plugins-bad-configure $(GST_PLUGINS_BAD_BUILD)/Makefile: | $(GST_PLUGINS_BAD_SRC) $(GST_PLUGINS_BAD_BUILD) $(GST_PLUGINS_BAD_SRC)/configure
+	$(AT_ENVIRONMENT) \
+	cd $(GST_PLUGINS_BAD_BUILD) && \
+	$(GST_PLUGINS_BAD_SRC)/configure \
+		--enable-v4l2-probe \
+		--prefix=/usr \
+		--host=$(AT_TARGET_HOST) \
+
+gst-plugins-bad-configure-help: | $(GST_PLUGINS_BAD_SRC) $(GST_PLUGINS_BAD_BUILD) $(GST_PLUGINS_BAD_SRC)/configure
+	$(AT_ENVIRONMENT) \
+	cd $(GST_PLUGINS_BAD_BUILD) && \
+	$(GST_PLUGINS_BAD_SRC)/configure \
+		--help
+
+
+gst-plugins-bad-build: $(GST_PLUGINS_BAD_BUILD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(GST_PLUGINS_BAD_BUILD)
+
+gst-plugins-bad-install: $(GST_PLUGINS_BAD_INSTALL)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) -j 8 -C $(GST_PLUGINS_BAD_BUILD) install DESTDIR=$(GST_PLUGINS_BAD_INSTALL)
+
+gst-plugins-bad-install-host: GST_PLUGINS_BAD_INSTALL=$(BUILDSYS_HOST)
+gst-plugins-bad-install-host: gst-plugins-bad-install
+
+gst-plugins-bad-install-target: GST_PLUGINS_BAD_INSTALL=$(ROOTFS)
+gst-plugins-bad-install-target: gst-plugins-bad-install
+
+gst-plugins-bad-distclean:
+	rm -rf $(GST_PLUGINS_BAD_BUILD)
+
+gst-plugins-bad-help:
+	@
