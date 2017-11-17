@@ -68,6 +68,9 @@ linux_save_config:
 	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
 	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
+linux-save-defconfig: linux-savedefconfig
+	@cp $(LINUX_BUILD)/defconfig $(BUILDSYS_TARGET_CONF)/kernel.config.defconfig
+
 menuconfig: $(LINUX_SRC) $(LINUX_BUILD) | $(LINUX_BUILD)/.config
 	$(LINUX_CMD) $@
 	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
