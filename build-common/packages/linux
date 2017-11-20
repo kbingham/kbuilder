@@ -93,6 +93,7 @@ defconfig $(BUILDSYS_TARGET_CONF)/kernel.config: | $(LINUX_SRC) $(LINUX_BUILD)
 $(LINUX_BUILD)/.config linux_restore_config: $(BUILDSYS_TARGET_CONF)/kernel.config
 	@echo "Copying $(BUILDSYS_TARGET_CONF)/kernel.config -> $(LINUX_BUILD)/.config"
 	@cp $(BUILDSYS_TARGET_CONF)/kernel.config $(LINUX_BUILD)/.config
+	yes "" | $(MAKE) linux-oldconfig
 
 # Exported Defines for external packages to utilise
 
