@@ -15,4 +15,4 @@ all salvator: fdp1-test-install-target linux dtb tftp
 linux: checkpatch
 
 checkpatch:
-	$(LINUX_SRC)/scripts/checkpatch.pl -f $(LINUX_SRC)/drivers/media/platform/rcar_fdp1.c
+	# $(LINUX_SRC)/scripts/checkpatch.pl -f $(LINUX_SRC)/drivers/media/platform/rcar_fdp1.c
