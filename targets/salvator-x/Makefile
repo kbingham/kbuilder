@@ -10,9 +10,15 @@ include $(BUILDSYS_ROOT)/build-common/Makefile
 
 -include packages/*
 
-all salvator: fdp1-test-install-target linux dtb tftp
+all salvator: linux dtb tftp
 
 linux: checkpatch
 
 checkpatch:
 	# $(LINUX_SRC)/scripts/checkpatch.pl -f $(LINUX_SRC)/drivers/media/platform/rcar_fdp1.c
+	#
+
+off on reboot:
+	acme-power salvator-x $@
+
+run: off all on
