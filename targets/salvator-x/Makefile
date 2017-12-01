@@ -19,6 +19,7 @@ checkpatch:
 	#
 
 off on reboot:
+	energenie-power 8camera $@
 	acme-power salvator-x $@
 
 run: off all on
