@@ -55,6 +55,12 @@ PACKAGES:=$(BUILDSYS_COMMON)/packages
 include $(BUILDSYS_COMMON)/support/*
 include $(PACKAGES)/*
 
+## Helpers
+
+$(MKDIRS):
+	@echo " [MKDIR] " $@
+	@mkdir -p $@
+
 # Our HOST path additions go on last so that they take precedence
 # Put our Buildsystem installables on to the path
 export PATH:=$(BUILDSYS_HOST)/usr/bin/:$(PATH)

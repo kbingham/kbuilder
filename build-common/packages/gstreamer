@@ -1,50 +1,30 @@
-## Build the gstreamer package
-
-GSTREAMER_SRC?=$(BUILDSYS_SOURCES)/gstreamer
-GSTREAMER_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/gstreamer
-GSTREAMER_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/gstreamer
-
-GSTREAMER_GIT=git://anongit.freedesktop.org/gstreamer/gstreamer
-GSTREAMER_BRANCH?=master
+GSTREAMER_AUTOGEN_OPTS:=--disable-gtk-doc
+GSTREAMER_CONFIGURE_OPTS:=--prefix=/usr
 
 
-$(GSTREAMER_BUILD) $(GSTREAMER_INSTALL):
-	@mkdir -p $@
+######################################################################
+### gstreamer
 
-$(GSTREAMER_SRC):
-	git clone $(GSTREAMER_GIT) -b $(GSTREAMER_BRANCH) $@
+gstreamer_AUTOGEN_OPTS+=$(GSTREAMER_AUTOGEN_OPTS)
+gstreamer_CONFIGURE_OPTS+=$(GSTREAMER_CONFIGURE_OPTS)
 
-gstreamer: gstreamer-build gstreamer-install-target
+$(eval $(call autotools-git,gstreamer,git://anongit.freedesktop.org/gstreamer/gstreamer))
 
-gstreamer-configure $(GSTREAMER_BUILD)/Makefile $(GSTREAMER_SRC)/configure: $(GSTREAMER_SRC) $(GSTREAMER_BUILD)
-	$(AT_ENVIRONMENT) \
-	cd $(GSTREAMER_BUILD) && \
-	$(GSTREAMER_SRC)/autogen.sh \
-		--disable-gtk-doc \
-		--host=$(AT_TARGET_HOST)
+######################################################################
+### gst-plugins-good
 
-gstreamer-configure-help: | $(GSTREAMER_SRC) $(GSTREAMER_BUILD) $(GSTREAMER_SRC)/configure
-	$(AT_ENVIRONMENT) \
-	cd $(GSTREAMER_BUILD) && \
-	$(GSTREAMER_SRC)/configure \
-		--help
+gst-plugins-good_AUTOGEN_OPTS+=$(GSTREAMER_AUTOGEN_OPTS)
+gst-plugins-good_CONFIGURE_OPTS+=$(GSTREAMER_CONFIGURE_OPTS)
 
-gstreamer-build: | $(GSTREAMER_BUILD)/Makefile
-	$(AT_ENVIRONMENT) \
-	$(MAKE) -j 8 -C $(GSTREAMER_BUILD)
+$(eval $(call autotools-git,gst-plugins-good,git://anongit.freedesktop.org/gstreamer/gst-plugins-good))
 
-gstreamer-install: $(GSTREAMER_INSTALL)
-	$(AT_ENVIRONMENT) \
-	$(MAKE) -j 8 -C $(GSTREAMER_BUILD) install DESTDIR=$(GSTREAMER_INSTALL)
+######################################################################
+### gst-plugins-bad
 
-gstreamer-install-sysroot: GSTREAMER_INSTALL=$(AT_SYSROOT)
-gstreamer-install-sysroot: gstreamer-install
+$(eval $(call autotools-git,gst-plugins-bad,git://anongit.freedesktop.org/gstreamer/gst-plugins-bad))
 
-gstreamer-install-target: GSTREAMER_INSTALL=$(ROOTFS)
-gstreamer-install-target: gstreamer-install
+######################################################################
+### gst-plugins-ugly
 
-gstreamer-distclean:
-	rm -rf $(GSTREAMER_BUILD)
+$(eval $(call autotools-git,gst-plugins-ugly,git://anongit.freedesktop.org/gstreamer/gst-plugins-ugly))
 
-gstreamer-help:
-	@

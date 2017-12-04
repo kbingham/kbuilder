@@ -1,0 +1,43 @@
+define autotools-git
+
+$(1)_SRC=$(BUILDSYS_SOURCES)/$(1)
+$(1)_BLD=$(BUILDSYS_BUILD)/$(1)
+
+SOURCES+=$$($(1)_SRC)
+MKDIRS+=$$($(1)_BLD)
+
+$$($(1)_SRC):
+	git clone $(2) --depth 1 $$@
+
+$$($(1)_SRC)/configure: | $$($(1)_SRC) $$($(1)_BLD)
+	$$(AT_ENVIRONMENT) \
+	cd $$($(1)_SRC) && \
+		./autogen.sh $$($(1)_AUTOGEN_OPTS) && \
+		$$(MAKE) distclean      ## Workaround
+
+$(1)-configure $$($(1)_BLD)/Makefile: $$($(1)_SRC)/configure
+	$$(AT_ENVIRONMENT) \
+	cd $$($(1)_BLD) && \
+		$$($(1)_SRC)/configure \
+			--prefix=/usr \
+			$$($(1)_CONFIGURE_OPTS)
+
+$(1)-configure-help: $$($(1)_SRC)/configure
+	$$(AT_ENVIRONMENT) \
+	$$($(1)_SRC)/configure --help
+
+$(1)-distclean:
+	rm -rf $$($(1)_BLD)
+
+$(1)-install:
+	$$(AT_ENVIRONMENT) \
+	$$(MAKE) -j 1 -C $$($(1)_BLD) install DESTDIR=$$(ROOTFS)
+
+$(1): | $$($(1)_BLD)/Makefile
+	$(AT_ENVIRONMENT) \
+	cd $$($(1)_BLD) && \
+		$$(MAKE) -j $$(J) && \
+		$$(MAKE) install
+
+endef
+
