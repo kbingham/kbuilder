@@ -52,7 +52,7 @@ endif
 ## Package support rules
 
 PACKAGES:=$(BUILDSYS_COMMON)/packages
-
+include $(BUILDSYS_COMMON)/support/*
 include $(PACKAGES)/*
 
 # Our HOST path additions go on last so that they take precedence

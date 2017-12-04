@@ -31,3 +31,14 @@ bisect: bisect_pre run linux-save-defconfig
 	git add kernel.config.defconfig
 	git commit -m "Updated kernel.config.defconfig"
 	git show -p
+
+TFTP_SERVER:=pi.nakedgeek.co.uk:/srv/tftp/
+
+$(eval $(call power,acme-power,salvator-x))
+$(eval $(call power,acme-power,salvator-xs))
+$(eval $(call power,energenie-power,8camera))
+$(eval $(call power,energenie-power,eagle-v3m))
+
+$(eval $(call target-helpers,salvator-x))
+$(eval $(call target-helpers,salvator-xs))
+$(eval $(call target-helpers,eagle-v3m))
