@@ -1,0 +1,5 @@
+# LibGPIOd
+
+# Requires linux-headers > 4.8 or such
+
+$(eval $(call autotools-git,libgpiod,git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git))
