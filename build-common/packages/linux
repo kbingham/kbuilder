@@ -108,3 +108,6 @@ linux-addr2line:
 
 linux-distclean:
 	rm -r $(LINUX_BUILD)
+
+linux-ksize:
+	cd $(LINUX_BUILD) && ksize.py
