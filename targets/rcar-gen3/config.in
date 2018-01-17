@@ -13,7 +13,7 @@ NFSROOT=$(ROOTFS)
 GDB_ARMGDB_OPTS+=-ex 'b internal_error'
 GDB_ARMGDB_OPTS+=-ex 'b warning'
 
-DTB=renesas/r8a77970-eagle.dtb
+DTB=dtbs
 
 # Simon Horms
 # LINUX_SRC=$(BUILDSYS_SOURCES)/renesas
