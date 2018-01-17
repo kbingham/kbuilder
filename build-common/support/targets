@@ -14,6 +14,7 @@ tftp-$(1):
 	rsync -Pav --progress $$(LINUX_BUILD)/arch/arm64/boot/*Image $$(TFTP_SERVER)/$(1)
 	rsync -Pav --progress $$(LINUX_BUILD)/arch/arm64/boot/dts/*/*.dtb $$(TFTP_SERVER)/$(1)
 
-run-$(1) $(1)-run: $(1)-off linux dtb tftp-$(1) $(1)-on
+$(1) run-$(1) $(1)-run: $(1)-off linux dtb tftp-$(1) $(1)-on
+
 endef
 
