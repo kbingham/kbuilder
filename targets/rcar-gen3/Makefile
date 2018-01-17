@@ -42,3 +42,5 @@ $(eval $(call power,energenie-power,eagle-v3m))
 $(eval $(call target-helpers,salvator-x))
 $(eval $(call target-helpers,salvator-xs))
 $(eval $(call target-helpers,eagle-v3m))
+
+$(eval $(call magnus-farm,9013-draak,9013,r8a77995-draak.dtb))
