@@ -56,6 +56,7 @@ $(1)-reset:
 	$(call magnus-ssh,$(2),power reset)
 
 $(1)-tftp:
+	$(call magnus-rsync,$(2),$$(OPENWRT_UIMAGE))
 	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm64/boot/Image)
 	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm64/boot/dts/renesas/$(3))
 

@@ -1,0 +1,40 @@
+
+##
+## Prepare an initramfs uImage based on the OpenWRT distribution
+##
+
+OPENWRT_URL	:= http://archive.openwrt.org/snapshots/trunk/arm64/generic
+OPENWRT_FILE	:= openwrt-arm64-qemu-virt.Image
+
+OPENWRT_SOURCES := $(BUILDSYS_SOURCES)/openwrt.initramfs
+OPENWRT_BUILD   := $(BUILDSYS_BUILD)/$(ARCH)/openwrt.initramfs
+
+OPENWRT_IMAGE	:= $(OPENWRT_SOURCES)/$(OPENWRT_FILE)
+OPENWRT_ROOTFS	:= $(OPENWRT_SOURCES)/_$(OPENWRT_FILE).extracted/cpio-root
+
+OPENWRT_INITRAMFS	:= $(OPENWRT_BUILD)/initramfs.cpio.gz
+OPENWRT_UIMAGE		:= $(OPENWRT_BUILD)/initramfs.uImage
+
+$(OPENWRT_SOURCES) $(OPENWRT_BUILD):
+	@echo " [MKDIR] " $@
+	@mkdir -p $@
+
+$(OPENWRT_IMAGE): | $(OPENWRT_SOURCES)
+	wget -P $(OPENWRT_SOURCES) $(OPENWRT_URL)/$(OPENWRT_FILE)
+	touch $@
+
+$(OPENWRT_ROOTFS): $(OPENWRT_IMAGE) | $(OPENWRT_BUILD)
+	# Clean up before extraction
+	rm -rf $(OPENWRT_SOURCES)/_$(OPENWRT_FILE).extracted
+	binwalk -C $(OPENWRT_SOURCES) -e $(OPENWRT_IMAGE)
+	sed -i 's\tts/0\ttySC0\' $(OPENWRT_ROOTFS)/etc/inittab
+
+$(OPENWRT_INITRAMFS): $(OPENWRT_ROOTFS) | $(OPENWRT_BUILD)
+	cd $(OPENWRT_ROOTFS) && \
+		find . | fakeroot cpio -H newc -o | gzip -9 > $@
+
+$(OPENWRT_UIMAGE): $(OPENWRT_INITRAMFS)
+	mkimage -A arm64 -O linux -T ramdisk -C gzip -d $(OPENWRT_INITRAMFS) $@
+
+# alias
+initramfs.uImage: $(OPENWRT_UIMAGE)
