@@ -10,9 +10,9 @@ include $(BUILDSYS_ROOT)/build-common/Makefile
 
 -include packages/*
 
-all: dtb linux
+dtb: linux-dtbs
 
-run: off all tftp on
+all: dtb linux
 
 linux: checkpatch
 
