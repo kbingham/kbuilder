@@ -35,7 +35,7 @@ $(1)-tftpd-start:
 			-net user,vlan=0,tftp=/home/user/ &
 
 $(1)-tftpd-stop:
-	$(call magnus-ssh,$(2), killall qemu-system-i386)
+	-$(call magnus-ssh,$(2), killall qemu-system-i386)
 
 $(1)-status:
 	$(call magnus-ssh,$(2), power status)
@@ -43,13 +43,13 @@ $(1)-status:
 $(1)-serial $(1)-console:
 	$(call magnus-ssh,$(2),-tC console)
 
-$(1)-on:
+$(1)-on: $(1)-tftpd-start
 	$(call magnus-ssh,$(2),power on)
 	sleep 2
 	$(call magnus-ssh,$(2),screen -X stuff \$$$$'^M^M^M')
 	$(call magnus-ssh,$(2),$$($(1)_UBOOT_CMD))
 
-$(1)-off:
+$(1)-off: $(1)-tftpd-stop
 	$(call magnus-ssh,$(2),power off)
 
 $(1)-reset:
