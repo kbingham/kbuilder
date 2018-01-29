@@ -13,29 +13,45 @@ $(V4L2_UTILS_BUILD) $(V4L2_UTILS_INSTALL):
 $(V4L2_UTILS_SRC):
 	git clone $(V4L2_UTILS_GIT) -b $(V4L2_UTILS_BRANCH) $@
 
-v4l2-utils: v4l2-utils-build v4l2-utils-install-host
+v4l2-utils: v4l2-utils-build v4l2-utils-install-target
 
 # Configure packages
 
 $(V4L2_UTILS_SRC)/configure: $(V4L2_UTILS_SRC)
+	$(AT_ENVIRONMENT) \
 	cd $(V4L2_UTILS_SRC) && \
 	./bootstrap.sh
 	#autoreconf -vfi
 
 
 v4l2-utils-configure $(V4L2_UTILS_BUILD)/Makefile: | $(V4L2_UTILS_SRC) $(V4L2_UTILS_BUILD) $(V4L2_UTILS_SRC)/configure
+	$(AT_ENVIRONMENT) \
 	cd $(V4L2_UTILS_BUILD) && \
 	$(V4L2_UTILS_SRC)/configure \
-		--prefix=/usr
+		--host=$(AT_TARGET_HOST) \
+		--prefix=/usr \
+		--disable-libdvbv5 \
+		--disable-libv4l
+
+v4l2-utils-configure-help: | $(V4L2_UTILS_SRC) $(V4L2_UTILS_BUILD) $(V4L2_UTILS_SRC)/configure
+	$(AT_ENVIRONMENT) \
+	cd $(V4L2_UTILS_BUILD) && \
+	$(V4L2_UTILS_SRC)/configure \
+		--help
 
 v4l2-utils-build: $(V4L2_UTILS_BUILD)/Makefile
-	$(MAKE) -j 8 -C $(V4L2_UTILS_BUILD)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) $J -C $(V4L2_UTILS_BUILD)
 
 v4l2-utils-install: $(BINUILS_INSTALL)
-	$(MAKE) -j 8 -C $(V4L2_UTILS_BUILD) install DESTDIR=$(V4L2_UTILS_INSTALL)
+	$(AT_ENVIRONMENT) \
+	$(MAKE) $J -C $(V4L2_UTILS_BUILD) install DESTDIR=$(V4L2_UTILS_INSTALL)
 
 v4l2-utils-install-host: V4L2_UTILS_INSTALL=$(BUILDSYS_HOST)
 v4l2-utils-install-host: v4l2-utils-install
+
+v4l2-utils-install-target: V4L2_UTILS_INSTALL=$(ROOTFS)
+v4l2-utils-install-target: v4l2-utils-install
 
 v4l2-utils-distclean:
 	rm -rf $(V4L2_UTILS_BUILD)
