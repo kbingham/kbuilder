@@ -1,0 +1,93 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+	for (x = 0; x <= 8; x++)
+		cameras[x] = "-"
+}
+
+/Linux version.*/ {
+	print
+	kernel = $5
+}
+
+/max9286\.i/ {
+	print
+	gsub(/.*ip=dhcp/,"") 
+	gsub(/max9286.i../, "")
+	probe_order = $0
+}
+
+/9286/ || /10635/ || /rdacm20/ || /9271/ {
+	print
+}
+
+/max9271_write/ {
+	max9271_write_fail++
+	print
+}
+
+/MAX9271 ID read failed/ {
+	max9271_read_fail++
+	print
+}
+
+/MAX9271 I2C address change failed/ {
+	max9271_i2c_address_fail++
+	print
+}
+
+/Identified MAX9271 . OV10635 device/ {
+	cameras_found++
+}
+
+/rdacm20 ..-005.: probe failed/ {
+	probe_failed++
+	gsub(/.*rdacm20 ..-005/,"")
+	gsub(/: probe failed.*/,"")
+	idx = $0
+	print "Camera " idx " failed to probe"
+	cameras[idx] = "X"
+}
+
+function Report ( string, value )
+{
+	if ( value )
+		print string value
+}
+
+function ParseProbe ( line )
+{
+	print index(line, "max9286.i1")
+}
+
+function PrintCameras()
+{
+	print "===================================="
+	print "| 1 | 2 | 3 | 4 |  | 5 | 6 | 7 | 8 |"
+	for (x=1; x <= 8; x++) {
+		printf "| " cameras[x] " "
+		if (x == 4)
+			printf("|  ")
+	}
+	printf "|\n"
+	print "===================================="
+}
+
+function Summarise() {
+	ParseProbe ( probe_order )
+	print "Parsing 8 Cameras on " kernel
+	print "Probe order is " probe_order
+
+	Report(" Max9271 Read Failures    : ", max9271_read_fail)
+	Report(" Max9271 Write Failures   : ", max9271_write_fail)
+	Report(" Max9271 Address Failures : ", max9271_i2c_address_fail)
+	Report(" RDACM20 found            : ", cameras_found)
+	Report(" RDACM20 failed           : ", probe_failed)
+
+	PrintCameras()
+
+}
+
+
+END { Summarise() }
+

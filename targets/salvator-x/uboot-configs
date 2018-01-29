@@ -1,0 +1,136 @@
+
+# KB Board Farm Salvator-X config
+baudrate=115200
+bootcmd=run nfsboot
+bootdelay=1
+bootdir=salvator
+bootfile=Image
+console=ttySC0,115200n8
+dnsip=194.168.4.100
+ethact=ravb
+ethaddr=2e:09:0a:00:83:91
+fdtaddr=0x48f00000
+fdtfile=r8a7795-salvator-x.dtb
+fileaddr=48f00000
+filesize=940d
+ipaddr=192.168.0.9
+loadaddr=0x48080000
+netargs=setenv bootargs ${optargs} root=/dev/nfs nfsroot=${serverip}:${rootpath},${nfsopts} rw ip=dhcp
+netboot=tftpboot 0x48080000 salvator/Image; tftpboot 0x48f00000 salvator/r8a7795-salvator-x.dtb; booti 0x48080000 - 0x48f00000
+nfsboot=tftpboot ${loadaddr} ${bootdir}/${bootfile}; tftpboot ${fdtaddr} ${bootdir}/${fdtfile}; run netargs; booti ${loadaddr} - ${fdtaddr}
+nfsopts=nolock
+optargs=loglevel=7 no_console_suspend=1 debug rcar_vin.dyndbg=+plm adv748x.dyndbg=+plm
+rootpath=/opt/root/salvator
+serverip=192.168.0.23
+stderr=serial
+stdin=serial
+stdout=serial
+ver=U-Boot 2015.04 (Sep 13 2016 - 11:32:36)
+
+## To set:
+
+setenv bootcmd 'run nfsboot'
+setenv bootdelay '1'
+setenv bootdir 'salvator'
+setenv bootfile 'Image'
+setenv console 'ttySC0,115200n8'
+setenv dnsip '194.168.4.100'
+setenv ethact 'ravb'
+setenv fdtaddr '0x48f00000'
+setenv fdtfile 'r8a7795-salvator-x.dtb'
+setenv fileaddr '48f00000'
+setenv loadaddr '0x48080000'
+setenv netargs 'setenv bootargs ${optargs} root=/dev/nfs nfsroot=${serverip}:${rootpath},${nfsopts} rw ip=dhcp'
+setenv netboot 'tftpboot 0x48080000 salvator/Image; tftpboot 0x48f00000 salvator/r8a7795-salvator-x.dtb; booti 0x48080000 - 0x48f00000'
+setenv nfsboot 'tftpboot ${loadaddr} ${bootdir}/${bootfile}; tftpboot ${fdtaddr} ${bootdir}/${fdtfile}; run netargs; booti ${loadaddr} - ${fdtaddr}'
+setenv nfsopts 'nolock'
+setenv optargs 'loglevel=7 no_console_suspend=1 debug rcar_vin.dyndbg=+plm adv748x.dyndbg=+plm'
+setenv rootpath '/opt/root/salvator'
+
+
+# To clean env:
+
+setenv bootcmd
+setenv bootdelay
+setenv bootdir
+setenv bootfile
+setenv console
+setenv dnsip
+setenv fdtaddr
+setenv fdtfile
+setenv fileaddr
+setenv filesize
+setenv ipaddr
+setenv loadaddr
+setenv netargs
+setenv netboot
+setenv nfsboot
+setenv nfsopts
+setenv optargs
+setenv rootpath
+setenv serverip
+
+### Simple boot
+
+
+setenv bootfile salvator/Image; dhcp; tftpboot 0x48f00000 salvator/r8a7795-salvator-x.dtb;
+setenv optargs "loglevel=7 no_console_suspend=1 debug rcar_vin.dyndbg=+plm adv748x.dyndbg=+plm";
+setenv bootargs ${optargs} root=/dev/nfs nfsroot=${serverip}:/opt/root/salvator,nolock rw ip=dhcp; booti 0x48080000 - 0x48f00000
+
+
+
+
+## Current Environment on Salvator-XS
+
+baudrate=115200
+bootargs=root=/dev/nfs rw nfsroot=192.168.0.1:/export/rfs ip=192.168.0.20
+bootcmd=tftp 0x48080000 Image; tftp 0x48000000 Image-r8a7795-salvator-x.dtb; booti 0x48080000 - 0x48000000
+bootdelay=3
+ethact=ravb
+ethaddr=2e:09:0a:00:c3:ce
+fdt_high=0xffffffffffffffff
+initrd_high=0xffffffffffffffff
+stderr=serial
+stdin=serial
+stdout=serial
+
+## To reset:
+
+setenv baudrate '115200'
+setenv bootargs 'root=/dev/nfs rw nfsroot=192.168.0.1:/export/rfs ip=192.168.0.20'
+setenv bootcmd 'tftp 0x48080000 Image; tftp 0x48000000 Image-r8a7795-salvator-x.dtb; booti 0x48080000 - 0x48000000'
+setenv bootdelay '3'
+setenv ethact 'ravb'
+setenv ethaddr '2e:09:0a:00:c3:ce'
+setenv fdt_high '0xffffffffffffffff'
+setenv initrd_high '0xffffffffffffffff'
+setenv stderr 'serial'
+setenv stdin 'serial'
+setenv stdout 'serial'
+
+
+
+
+
+
+
+
+nfsboot=tftpboot ${loadaddr} ${bootdir}/${bootfile}; tftpboot ${fdtaddr} ${bootdir}/${fdtfile}; run netargs; booti ${loadaddr} - ${fdtaddr}
+
+setenv nfsboot 'tftpboot ${loadaddr} ${bootdir}/${bootfile}; tftpboot ${fdtaddr} ${bootdir}/${fdtfile}; run netargs; booti ${loadaddr} - ${fdtaddr}'
+
+V1 : Double quotes and escaped ;
+sed -e 's/^\(\w*\)=\(.*\)/setenv \1 "\2"/g'        -e 's/;/\\;/g' uboot-configs
+
+v2: Single quotes
+sed -e "s/^\(\w*\)=\(.*\)/setenv \1 '\2'/g"   uboot-configs
+
+
+
+
+
+setenv stderr 'serial'
+setenv stdin 'serial'
+setenv stdout 'serial'
+
+
