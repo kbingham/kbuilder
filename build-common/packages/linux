@@ -30,11 +30,15 @@ LINUX_CMD := \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		INSTALL_MOD_PATH=$(TARGET_MOD_DIR) \
 		$(LINUX_BUILD_EXTRA) \
+		$(W) \
 		-j$(J)
 
 
 linux-%: $(LINUX_BUILD)/.config
 	$(LINUX_CMD) $*
+
+## Enable full warnings on device tree objects
+dtbs: W=W=1
 
 .PHONY:	vmlinux zImage
 uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: $(LINUX_BUILD)/.config
