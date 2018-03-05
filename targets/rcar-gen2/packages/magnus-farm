@@ -1,0 +1,68 @@
+MAGNUS_IP:=220.157.214.90
+
+define magnus-rsync
+	rsync -e 'ssh -oPort=$(1) -oUser=user' -Pav --progress $(2) $$(MAGNUS_IP):$(3)
+endef
+
+define magnus-ssh
+	ssh user@$$(MAGNUS_IP) -p $(1) $(2)
+endef
+
+define magnus-farm
+
+# Target:  $(1)
+# Port:    $(2)
+# DTB:     $(3)
+# CmdLine: $(4)
+
+# Kernel max size: 31981568 [0x1e80000] (~30M)
+KERNEL_A := 0x48080000
+DTB_A := 0x49f00000
+
+# INITRD at the end, DTB_A + 1M
+INITRD_A := 0x4a000000
+
+### geertu:   \$ is magic required for Magnus' farm.
+###           Documented nowhere and copied from an example on the 'net
+### kbingham: This is escaped to \$$$$
+$(1)_UBOOT_CMD:=screen -X stuff \
+	\$$$$\'setenv bootargs ignore_loglevel $(4)\; setenv ipaddr 10.0.2.15\; setenv serverip 10.0.2.2\; tftpboot $$(KERNEL_A) Image\; tftpboot $$(INITRD_A) initramfs.uImage\; tftpboot $$(DTB_A) $(3)\; booti $$(KERNEL_A) $$(INITRD_A) $$(DTB_A)\\n\'
+
+$(1)-tftpd-start:
+	ssh user@$$(MAGNUS_IP) -p $(2) \
+		qemu-system-i386 -machine none -net nic,vlan=0 \
+			-net tap,vlan=0,ifname=tap0,script=no,downscript=no \
+			-net user,vlan=0,tftp=/home/user/ &
+
+$(1)-tftpd-stop:
+	-$(call magnus-ssh,$(2), killall qemu-system-i386)
+
+$(1)-status:
+	$(call magnus-ssh,$(2), power status)
+
+$(1)-serial $(1)-console:
+	$(call magnus-ssh,$(2),-tC console)
+
+$(1)-on: $(1)-tftpd-start
+	$(call magnus-ssh,$(2),power on)
+	sleep 2
+	$(call magnus-ssh,$(2),screen -X stuff \$$$$'^M^M^M')
+	$(call magnus-ssh,$(2),$$($(1)_UBOOT_CMD))
+
+$(1)-off: $(1)-tftpd-stop
+	$(call magnus-ssh,$(2),power off)
+
+$(1)-reset:
+	$(call magnus-ssh,$(2),power reset)
+
+$(1)-tfix:
+	$(call magnus-ssh,$(2),rm Image)
+
+$(1)-tftp: $(1)-tfix
+	$(call magnus-rsync,$(2),$$(OPENWRT_UIMAGE))
+	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm/boot/Image)
+	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm/boot/dts/$(3))
+
+$(1) $(1)-run: $(1)-off linux dtb $(1)-tftp $(1)-on
+
+endef

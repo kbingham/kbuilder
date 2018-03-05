@@ -1,0 +1,13 @@
+ARCH:=arm
+SUBARCH:=armv7
+LINUX_DEFAULT_TARGET=linux-zImage
+
+UBUNTUFS_VERSION=vivid
+UBUNTUFS=/opt/root/ubuntu-$(UBUNTUFS_VERSION).$(ARCH)
+
+ROOTFS=/opt/root/salvator
+
+TARGET_MOD_DIR:=$(ROOTFS)
+NFSROOT=$(ROOTFS)
+
+-include autotools.cross
