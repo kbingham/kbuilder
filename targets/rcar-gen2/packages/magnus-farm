@@ -16,17 +16,19 @@ define magnus-farm
 # CmdLine: $(4)
 
 # Kernel max size: 31981568 [0x1e80000] (~30M)
-KERNEL_A := 0x48080000
-DTB_A := 0x49f00000
+KERNEL_A := 0x41000000
+DTB_A := 0x40f00000
 
 # INITRD at the end, DTB_A + 1M
-INITRD_A := 0x4a000000
+#INITRD_A := 0x50000000
+INITRD_A := -
 
 ### geertu:   \$ is magic required for Magnus' farm.
 ###           Documented nowhere and copied from an example on the 'net
 ### kbingham: This is escaped to \$$$$
 $(1)_UBOOT_CMD:=screen -X stuff \
-	\$$$$\'setenv bootargs ignore_loglevel $(4)\; setenv ipaddr 10.0.2.15\; setenv serverip 10.0.2.2\; tftpboot $$(KERNEL_A) Image\; tftpboot $$(INITRD_A) initramfs.uImage\; tftpboot $$(DTB_A) $(3)\; booti $$(KERNEL_A) $$(INITRD_A) $$(DTB_A)\\n\'
+	\$$$$\'setenv bootargs ignore_loglevel $(4)\; setenv ipaddr 10.0.2.15\; setenv serverip 10.0.2.2\; tftpboot $$(KERNEL_A) zImage.dtb\; bootz $$(KERNEL_A) $$(INITRD_A) \\n\'
+
 
 $(1)-tftpd-start:
 	ssh user@$$(MAGNUS_IP) -p $(2) \
@@ -43,6 +45,9 @@ $(1)-status:
 $(1)-serial $(1)-console:
 	$(call magnus-ssh,$(2),-tC console)
 
+$(1)-mgr:
+	$(call magnus-ssh,$(2),-t)
+
 $(1)-on: $(1)-tftpd-start
 	$(call magnus-ssh,$(2),power on)
 	sleep 2
@@ -56,12 +61,14 @@ $(1)-reset:
 	$(call magnus-ssh,$(2),power reset)
 
 $(1)-tfix:
-	$(call magnus-ssh,$(2),rm Image)
+	-$(call magnus-ssh,$(2),rm zImage)
 
 $(1)-tftp: $(1)-tfix
-	$(call magnus-rsync,$(2),$$(OPENWRT_UIMAGE))
-	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm/boot/Image)
+	$(call magnus-rsync,$(2),initramfs.uImage)
+	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm/boot/zImage)
 	$(call magnus-rsync,$(2),$$(LINUX_BUILD)/arch/arm/boot/dts/$(3))
+	@echo "Appending $(3) to zImage"
+	$(call magnus-ssh,$(2),"cat zImage $(3) > zImage.dtb")
 
 $(1) $(1)-run: $(1)-off linux dtb $(1)-tftp $(1)-on
 
