@@ -43,6 +43,9 @@ $(1)-status:
 $(1)-serial $(1)-console:
 	$(call magnus-ssh,$(2),-tC console)
 
+$(1)-mgr:
+	$(call magnus-ssh,$(2),-tC)
+
 $(1)-on: $(1)-tftpd-start
 	$(call magnus-ssh,$(2),power on)
 	sleep 2
