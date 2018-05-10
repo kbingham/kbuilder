@@ -11,8 +11,8 @@ endef
 
 define target-helpers
 tftp-$(1):
-	rsync -Pavz --progress $$(LINUX_BUILD)/arch/arm64/boot/*Image $$(TFTP_SERVER)/$(1)/
-	rsync -Pavz --progress $$(LINUX_BUILD)/arch/arm64/boot/dts/*/*.dtb $$(TFTP_SERVER)/$(1)/
+	rsync -Pavz --progress $$(LINUX_IMAGES) $$(TFTP_SERVER)/$(1)/
+	rsync -Pavz --progress $$(LINUX_DTBS) $$(TFTP_SERVER)/$(1)/
 
 $(1)-console:
 	serial $(1)

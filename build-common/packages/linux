@@ -19,9 +19,14 @@ J?=8
 ## Linux uses a different naming format than everyone else for ARM64
 ifeq ($(ARCH),aarch64)
 LINUX_ARCH=arm64
+LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/*/*.dtb
 else
 LINUX_ARCH?=$(ARCH)
+LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/*.dtb
 endif
+
+## Helpers for targets
+LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
 
 LINUX_CMD := \
 	$(MAKE) -C $(LINUX_SRC) \
@@ -101,7 +106,7 @@ $(LINUX_BUILD)/.config linux_restore_config: $(BUILDSYS_TARGET_CONF)/kernel.conf
 
 # Exported Defines for external packages to utilise
 
-LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/
+# LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/
 LINUX_VMLINUX:=$(LINUX_BUILD)/vmlinux
 
 # Extra helpers
