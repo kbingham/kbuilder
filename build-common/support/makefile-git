@@ -1,0 +1,33 @@
+define makefile-git
+
+$(1)_SRC=$(BUILDSYS_SOURCES)/$(1)
+
+# Simple in tree builds
+$(1)_BLD=$$($(1)_SRC)
+
+$(1)_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/$(1)
+
+SOURCES+=$$($(1)_SRC)
+MKDIRS+=$$($(1)_INSTALL)
+
+$$($(1)_SRC):
+	git clone $(2) -b $(3) $$@
+
+$(1)-distclean:
+	@echo "Removing $$($(1)_BLD): Are you sure? <ctrl-c> to cancel"
+	@read check
+	rm -rf $$($(1)_BLD)
+
+$(1)-install:
+	$$(AT_ENVIRONMENT) \
+	$$(MAKE) -j 1 -C $$($(1)_BLD) install DESTDIR=$$(ROOTFS)
+
+$$($(1)_BLD)/Makefile: | $$($(1)_SRC)
+
+$(1): | $$($(1)_BLD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$$($(1)_ENVIRONMENT) \
+	$$(MAKE) -C $$($(1)_BLD)
+
+endef
+
