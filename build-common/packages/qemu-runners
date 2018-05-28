@@ -1,0 +1,101 @@
+# Qemu Target Support
+
+NFSROOT?=/opt/STM/STLinux-2.4/devkit/armv7/target
+NFSROOT_OPTIONS?=,tcp,v3
+
+QEMU_SERVERIP:=10.0.2.2
+QEMU_NFSROOT:=$(QEMU_SERVERIP):$(NFSROOT)$(NFSROOT_OPTIONS)
+
+#
+## http://www.commandlinefu.com/commands/view/7299/find-an-unused-unprivileged-tcp-port
+#
+
+QEMU_GDBSERVER_PORT=$(shell port=32768; while netstat -atn | grep -q :$$port; do port=$$(expr $$port + 1); done; echo $$port)
+QEMU_GDBSERVER_PORT_FILE=qemu_gdbserver_port
+QEMU_GDBSERVER_PORT_ID=$(shell cat $(QEMU_GDBSERVER_PORT_FILE))
+
+# Vexpress Targets
+# vexpress-a9  : vexpress-v2p-ca9.dts
+# vexpress-a15 : vexpress-v2p-ca15-tc1.dtb
+
+QEMU_MACHINE?=vexpress-a15
+QEMU_DTB?=vexpress-v2p-ca15-tc1.dtb
+
+qemu_arma9: QEMU_MACHINE:=vexpress-a9
+qemu_arma9: QEMU_DTB:=vexpress-v2p-ca9.dtb
+qemu_arma9: qemu-system-arm
+
+QEMU_CORES?=2
+
+qemu-run: qemu-system-$(ARCH)
+
+## As long as the kernel is multiv7 - we can just run as a VExpress..
+qemu-system-arm: $(QEMU_DTB)
+	echo $(QEMU_GDBSERVER_PORT) > $(QEMU_GDBSERVER_PORT_FILE)
+	qemu-system-arm \
+		-kernel $(LINUX_BUILD)/arch/arm/boot/zImage \
+		-dtb $(LINUX_DTBS)/$(QEMU_DTB) \
+		-M $(QEMU_MACHINE) \
+		-smp $(QEMU_CORES) \
+		-m 1024 \
+		-append 'root=/dev/nfs nfsroot=$(QEMU_NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
+		-nographic \
+		$(QEMU_HALT) \
+		-gdb tcp::$(QEMU_GDBSERVER_PORT)
+
+qemu_halted: QEMU_HALT:=-S
+qemu_halted: qemu-system-arm
+
+#		-sd vexpress-1G.img \
+ARMGDB?=arm-none-eabi-gdb \
+
+qemu-system-aarch64:
+	echo $(QEMU_GDBSERVER_PORT) > $(QEMU_GDBSERVER_PORT_FILE)
+	$@ \
+		-kernel $(LINUX_BUILD)/arch/arm64/boot/Image \
+		-M virt \
+		-cpu cortex-a57 \
+		-machine type=virt \
+		-smp $(QEMU_CORES) \
+		-m 1024 \
+		-append 'root=/dev/nfs nfsroot=$(QEMU_NFSROOT) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyAMA0,38400n8 devtmpfs.mount=0' \
+		-nographic \
+		$(QEMU_HALT) \
+		-gdb tcp::$(QEMU_GDBSERVER_PORT)
+
+qemu-gdbserver: GDBSERVER:=gdbserver localhost:3456
+qemu-gdbserver: qemu-gdb
+
+gdb-qemu-gdbserver:
+	gdb $(ARMGDB) -ex 'target remote localhost:3456'
+
+qemu-gdb:
+	# Link the Kernel VMLinux locally for python lx-symbols
+	ln -f -s $(LINUX_BUILD)/vmlinux
+	$(GDBSERVER) \
+	$(ARMGDB) \
+		$(LINUX_BUILD)/vmlinux \
+		-iex 'add-auto-load-safe-path $(LINUX_BUILD)' \
+		-ex 'target remote localhost:$(QEMU_GDBSERVER_PORT_ID)' \
+#		-iex 'lx-symbols'
+
+debug-core:
+	gdb $(ARMGDB) core
+
+gdb-armgdb:
+	@pidof $(ARMGDB) || (echo "Could not detect a PID for $(ARMGDB)" && false)
+	@echo "Warning: Disabling PTrace Scope Security"
+	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+	gdb -p $(shell pidof $(ARMGDB)) \
+		$(GDB_ARMGDB_OPTS)
+
+qemu-system-x86_64 qemu-system-i386:
+	echo $(QEMU_GDBSERVER_PORT) > qemu_gdbserver_port
+	$@ \
+		-kernel $(LINUX_BUILD)/arch/x86/boot/bzImage \
+		-smp $(QEMU_CORES) \
+		-m 1024 \
+		-append 'root=/dev/nfs nfsroot=/opt/root/ubuntu-vivid.$(ARCH) rw ip=dhcp mem=1024M raid=noautodetect rootwait console=ttyS0 devtmpfs.mount=0' \
+		-nographic \
+		$(QEMU_HALT) \
+		-gdb tcp::$(QEMU_GDBSERVER_PORT)
