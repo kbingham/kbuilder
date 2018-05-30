@@ -6,7 +6,7 @@ LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.
 LINUX_DEFAULT_TARGET?=zImage
 
 .PHONY: linux
-linux: $(LINUX_BUILD)/.config $(LINUX_DEFAULT_TARGET)
+linux: $(LINUX_DEFAULT_TARGET)
 
 ## Obtain the sources:
 
@@ -27,10 +27,12 @@ endif
 
 ## Helpers for targets
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
+LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config
 
 LINUX_CMD := \
 	$(MAKE) -C $(LINUX_SRC) \
 		O=$(LINUX_BUILD) \
+		KCONFIG_CONFIG=$(LINUX_CONFIG) \
 		ARCH=$(LINUX_ARCH) \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		INSTALL_MOD_PATH=$(TARGET_MOD_DIR) \
@@ -39,14 +41,14 @@ LINUX_CMD := \
 		-j$(J)
 
 
-linux-%: $(LINUX_BUILD)/.config
+linux-%:
 	$(LINUX_CMD) $*
 
 ## Enable full warnings on device tree objects
 dtbs: W=W=1
 
 .PHONY:	vmlinux zImage
-uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: $(LINUX_BUILD)/.config
+uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig:
 	$(LINUX_CMD) $@
 
 # Linux knows how to make DTB's
@@ -59,9 +61,6 @@ dtb: $(DTB)
 linux_help: $(LINUX_SRC)
 	$(LINUX_CMD) help
 
-linux_kernel: zImage
-
-
 ## External Module support
 
 module:
@@ -73,36 +72,21 @@ module:
 $(LINUX_BUILD):
 	@mkdir -p $@
 
-linux_save_config:
-	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
-	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
-
-linux-save-defconfig: linux-savedefconfig
+linux-savedefconfig:
+	$(LINUX_CMD) savedefconfig
+	@echo "Copying $(LINUX_BUILD)/defconfig to $(BUILDSYS_TARGET_CONF)/kernel.config.defconfig"
 	@cp $(LINUX_BUILD)/defconfig $(BUILDSYS_TARGET_CONF)/kernel.config.defconfig
 
-menuconfig: $(LINUX_SRC) $(LINUX_BUILD) | $(LINUX_BUILD)/.config
+menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	$(LINUX_CMD) $@
-	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
-	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
 %_defconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	@echo " [CONFIG] Configuring from $@"
 	$(LINUX_CMD) $@
-	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
 
-# Whilst this rule 'creates' a $(LINUX_BUILD)/.config, that is not this target aim
 defconfig $(BUILDSYS_TARGET_CONF)/kernel.config: | $(LINUX_SRC) $(LINUX_BUILD)
-	@echo "Making DEFCONFIG to create $(LINUX_BUILD)/.config from $(DEFCONFIG)"
+	@echo "Making DEFCONFIG to create $(LINUX_CONFIG) from $(DEFCONFIG)"
 	$(MAKE) $(DEFCONFIG)
-	@echo "Copying $(LINUX_BUILD)/.config -> $(BUILDSYS_TARGET_CONF)"
-	@cp $(LINUX_BUILD)/.config $(BUILDSYS_TARGET_CONF)/kernel.config
-
-
-# Update .config with the kernel.config in the target configuration
-$(LINUX_BUILD)/.config linux_restore_config: $(BUILDSYS_TARGET_CONF)/kernel.config
-	@echo "Copying $(BUILDSYS_TARGET_CONF)/kernel.config -> $(LINUX_BUILD)/.config"
-	@cp $(BUILDSYS_TARGET_CONF)/kernel.config $(LINUX_BUILD)/.config
-	yes "" | $(MAKE) linux-oldconfig
 
 # Exported Defines for external packages to utilise
 
