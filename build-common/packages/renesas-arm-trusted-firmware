@@ -1,0 +1,51 @@
+
+MAKE_FLAGS=PLAT=rcar
+
+define cross-make
+
+# $(1): Package name
+# $(2): GIT URL
+# $(3): GIT Branch
+
+# Pull in $(1)-source
+$(eval $(call sources-git,$(1),$(2),$(3)))
+
+
+$(1)-pt-%:
+	$(AT_ENVIRONMENT) \
+	cd $$($(1)_SRC) && $$(MAKE) $$($(1)_MAKE_FLAGS) $$*
+
+.$(1)-build: $(1)-source
+	$(AT_ENVIRONMENT) \
+	cd $$($(1)_SRC) && $$(MAKE) $$($(1)_MAKE_FLAGS)
+
+
+.$(1)-pre-build-hook:
+.$(1)-post-build-hook:
+
+$(1): .$(1)-pre-build-hook .$(1)-build .$(1)-post-build-hook
+
+endef
+
+
+
+arm-trusted-firmware_MAKE_FLAGS = PLAT=rcar RCAR_DRAM_SPLIT=3 RCAR_BL33_EXECUTION_EL=1 $(RCAR_ATF_LSI)
+
+# Default
+RCAR_ATF_LSI = LSI=H3
+
+arm-trusted-firmware-h3: RCAR_ATF_LSI = LSI=H3
+arm-trusted-firmware-h3: arm-trusted-firmware
+
+arm-trusted-firmware-m3w: RCAR_ATF_LSI = LSI=M3
+arm-trusted-firmware-m3w: arm-trusted-firmware
+
+arm-trusted-firmware-m3n: RCAR_ATF_LSI = LSI=M3N
+arm-trusted-firmware-m3n: arm-trusted-firmware
+
+.arm-trusted-firmware-post-build-hook:
+	@realpath $(arm-trusted-firmware_SRC)
+	@ls -alh $(arm-trusted-firmware_SRC)/build/rcar/release
+
+# Renesas RCar ARM Trusted Firmware (ATF)
+$(eval $(call cross-make,arm-trusted-firmware,https://github.com/renesas-rcar/arm-trusted-firmware.git,rcar_gen3))
