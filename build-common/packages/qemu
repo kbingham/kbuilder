@@ -1,34 +1,20 @@
-## Build a qemu-gdb package
+## Build a qemu package
 
-QEMU_SRC?=$(BUILDSYS_SOURCES)/qemu
-QEMU_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/qemu
-QEMU_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/qemu
+qemu_CONFIGURE_OPTS:= \
+    --cross-prefix=${CROSS_COMPILE}                            \
+    --target-list=aarch64-softmmu                              \
+    --enable-attr       --enable-fdt       --enable-kvm        \
+    --enable-sdl        --enable-system    --enable-tools      \
+    --enable-vhost-net --enable-vhost-user \
+		\
+    --audio-drv-list=                                          \
+    --disable-bluez     --disable-brlapi   --disable-bsd-user  \
+    --disable-cap-ng    --disable-curl     --disable-curses    \
+    --disable-docs      --disable-libiscsi --disable-linux-aio \
+    --disable-rbd       --disable-seccomp                      \
+    --disable-sparse    --disable-spice    --disable-strip     \
+    --disable-usb-redir --disable-vde      --disable-virtfs    \
+    --disable-vnc       --disable-werror   --disable-xen       \
 
-QEMU_GIT?=https://github.com/qemu/qemu.git
-QEMU_BRANCH?=master
 
-$(QEMU_BUILD) $(QEMU_INSTALL):
-	@mkdir -p $@
-
-$(QEMU_SRC):
-	git clone $(QEMU_GIT) -b $(QEMU_BRANCH) $@
-
-qemu: qemu-build qemu-install-host
-
-# Configure packages
-qemu-configure $(QEMU_BUILD)/Makefile: | $(QEMU_SRC) $(QEMU_BUILD) $(QEMU_SRC)/configure
-	cd $(QEMU_BUILD) && \
-	$(QEMU_SRC)/configure \
-		--prefix=/usr
-
-qemu-build: $(QEMU_BUILD)/Makefile
-	$(MAKE) -j 8 -C $(QEMU_BUILD)
-
-qemu-install: $(BINUILS_INSTALL)
-	$(MAKE) -j 8 -C $(QEMU_BUILD) install DESTDIR=$(QEMU_INSTALL)
-
-qemu-install-host: QEMU_INSTALL=$(BUILDSYS_HOST)
-qemu-install-host: qemu-install
-
-qemu-distclean:
-	rm -rf $(QEMU_BUILD)
+$(eval $(call autotools-git,qemu,https://github.com/qemu/qemu.git,v2.12.0))
