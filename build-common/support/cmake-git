@@ -1,0 +1,54 @@
+#CMAKE_TOOLCHAIN_FILE=/home/linuxembedded/iob/fdp1/buildroot/salvator/host/usr/share/buildroot/toolchainfile.cmake
+
+#                -DCMAKE_INSTALL_PREFIX=/usr \
+#                -DCMAKE_BUILD_TYPE=Debug \
+#                -DKMSXX_ENABLE_KMSCUBE=ON \
+#                -DKMSXX_ENABLE_PYTHON=ON \
+#                -DBUILD_SHARED_LIBS=ON
+
+define cmake-git
+
+$(eval $(call sources-git,$(1),$(2),$(3)))
+
+$(1)_BLD=$(BUILDSYS_BUILD)/$(ARCH)/$(1)
+MKDIRS+=$$($(1)_BLD)
+
+$(1)_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/$(1)
+MKDIRS+=$$($(1)_INSTALL)
+
+# Default to install in our global ROOTFS
+$(1)_INSTALL=$(ROOTFS)
+
+$(1)-pt-%:
+	$$(MAKE) -C $$($(1)_BLD) $$*
+
+$(1)-clean:
+
+$(1)-distclean:
+	@echo "Removing $$($(1)_BLD): Are you sure? <ctrl-c> to cancel"
+	@read check
+	rm -rf $$($(1)_BLD)
+
+$(1)-install:
+	$$(MAKE) -j 1 -C $$($(1)_BLD) install DESTDIR=$$($(1)_INSTALL)
+
+
+$(1)-package: $(1)_INSTALL=/tmp/$(1)
+$(1)-package: $(1)-install
+	@echo packaging : $(1)_INSTALL=$$($(1)_INSTALL)
+	tar -C $$($(1)_INSTALL) -czf $(1).tgz .
+	rm -r $$($(1)_INSTALL)
+	ls -alh $(1).tgz
+
+$(1)-configure $$($(1)_BLD)/Makefile: | $$($(1)_SRC) $$($(1)_BLD)
+	cd $$($(1)_BLD) && \
+	cmake $$($(1)_SRC) \
+		-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_TOOLCHAIN_FILE) \
+                -DCMAKE_INSTALL_PREFIX=/usr \
+
+
+$(1): | $$($(1)_BLD)/Makefile
+	$$(MAKE) -C $$($(1)_BLD)
+
+endef
+

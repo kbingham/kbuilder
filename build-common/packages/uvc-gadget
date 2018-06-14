@@ -3,5 +3,5 @@
 
 uvc-gadget_ENVIRONMENT=CROSS_COMPILE=$(CROSS_COMPILE)
 
-$(eval $(call makefile-git,uvc-gadget,git://git.ideasonboard.org/uvc-gadget.git,devel))
+$(eval $(call cmake-git,uvc-gadget,git://git.ideasonboard.org/uvc-gadget.git,devel))
 
