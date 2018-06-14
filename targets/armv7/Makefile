@@ -8,8 +8,9 @@ TARGET:=$(shell basename $(BUILDSYS_TARGET_CONF))
 # Pull in the main makefile for packages
 include $(BUILDSYS_ROOT)/build-common/Makefile
 
+# Pull in target specific packages
+-include packages/*
 
 TFTP_SERVER:=pi.nakedgeek.co.uk:/srv/tftp/
 
-$(eval $(call power,energenie-power.banoffee,pandaboard))
-$(eval $(call target-helpers,pandaboard))
+all: linux

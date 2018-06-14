@@ -1,0 +1,18 @@
+
+$(eval $(call power,energenie-power.banoffee,pandaboard))
+$(eval $(call target-helpers,pandaboard))
+
+PANDA_MODULES=/tmp/pandaboard
+
+pandaboard-modules: TARGET_MOD_DIR=$(PANDA_MODULES)
+pandaboard-modules: modules modules_install
+	@echo "Modules installed to $(PANDA_MODULES)"
+	tar -C $(PANDA_MODULES) -cvf $(PANDA_MODULES).tgz .
+	scp $(PANDA_MODULES).tgz pi.nakedgeek.co.uk:$(PANDA_MODULES).tgz
+	ssh pi.nakedgeek.co.uk -tC "sudo tar -C /opt/root/armv7 -xvf $(PANDA_MODULES).tgz"
+	rm -r $(PANDA_MODULES)/
+
+pandaboard-uvc-gadget: uvc-gadget-distclean uvc-gadget uvc-gadget-package
+	scp uvc-gadget.tgz pandaboard:/tmp/
+	ssh pandaboard -tC "cd / && tar xvf /tmp/uvc-gadget.tgz"
+	scp $(BUILDSYS_SOURCES)/uvc-gadget/scripts/uvc-gadget.sh pandaboard:/usr/bin/
