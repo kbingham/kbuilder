@@ -1,41 +1,7 @@
 ## Build a python2.7 package
 
-PYTHON27_SRC?=$(BUILDSYS_SOURCES)/python2.7
-PYTHON27_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/python2.7
-PYTHON27_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/python2.7
+python2.7_CONFIGURE_OPTS:= \
+	--prefix=/usr \
+	--enable-unicode
 
-PYTHON27_GIT?=https://github.com/python/cpython.git
-PYTHON27_BRANCH?=2.7
-
-$(PYTHON27_SRC):
-	git clone $(PYTHON27_GIT) $(PYTHON27_SRC) -b $(PYTHON27_BRANCH)
-
-$(PYTHON27_BUILD) $(PYTHON27_INSTALL):
-	@mkdir -p $@
-
-python2.7: python2.7-build python2.7-install-host
-
-# Configure packages
-python2.7-configure $(PYTHON27_BUILD)/Makefile: | $(PYTHON27_SRC) $(PYTHON27_BUILD) $(PYTHON27_SRC)/configure
-	cd $(PYTHON27_BUILD) && \
-	$(PYTHON27_SRC)/configure \
-		--enable-unicode \
-		--prefix=/usr
-
-# Configure packages
-python2.7-configure-help: | $(PYTHON27_SRC) $(PYTHON27_BUILD) $(PYTHON27_SRC)/configure
-	cd $(PYTHON27_BUILD) && \
-	$(PYTHON27_SRC)/configure \
-	 	--help
-
-python2.7-build: $(PYTHON27_BUILD)/Makefile
-	$(MAKE) -j 8 -C $(PYTHON27_BUILD)
-
-python2.7-install: $(BINUILS_INSTALL)
-	$(MAKE) -j 8 -C $(PYTHON27_BUILD) install DESTDIR=$(PYTHON27_INSTALL)
-
-python2.7-install-host: PYTHON27_INSTALL=$(BUILDSYS_HOST)
-python2.7-install-host: python2.7-install
-
-python2.7-distclean:
-	rm -rf $(PYTHON27_BUILD)
+$(eval $(call autotools-git,python2.7,https://github.com/python/cpython.git,2.7))
