@@ -41,14 +41,14 @@ LINUX_CMD := \
 		-j$(J)
 
 
-linux-%:
+linux-%: | $(LINUX_SRC)
 	$(LINUX_CMD) $*
 
 ## Enable full warnings on device tree objects
 dtbs: W=W=1
 
 .PHONY:	vmlinux zImage
-uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig:
+uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: | $(LINUX_SRC) $(LINUX_BUILD)
 	$(LINUX_CMD) $@
 
 # Linux knows how to make DTB's
