@@ -5,6 +5,8 @@ LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.
 
 LINUX_DEFAULT_TARGET?=zImage
 
+LINUX_CURRENT:=$(shell uname -r)
+
 .PHONY: linux
 linux: $(LINUX_DEFAULT_TARGET)
 
@@ -29,8 +31,16 @@ endif
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
 LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config
 
-LINUX_CMD := \
-	$(MAKE) -C $(LINUX_SRC) \
+
+LINUX_KBUILD=$(LINUX_SRC)
+
+module-current: LINUX_BUILD:=$(LINUX_BUILD)-$(LINUX_CURRENT)
+module-current: LINUX_KBUILD=/lib/modules/$(LINUX_CURRENT)/build
+module-current: module
+
+
+LINUX_CMD = \
+	$(MAKE) -C $(LINUX_KBUILD) \
 		O=$(LINUX_BUILD) \
 		KCONFIG_CONFIG=$(LINUX_CONFIG) \
 		ARCH=$(LINUX_ARCH) \
