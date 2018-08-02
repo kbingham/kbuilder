@@ -1,0 +1,24 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image
+
+UBUNTUFS_VERSION=vivid
+UBUNTUFS=/opt/root/ubuntu-$(UBUNTUFS_VERSION).$(ARCH)
+
+ROOTFS=/opt/root/salvator
+
+TARGET_MOD_DIR:=$(ROOTFS)
+NFSROOT=$(ROOTFS)
+
+GDB_ARMGDB_OPTS+=-ex 'b internal_error'
+GDB_ARMGDB_OPTS+=-ex 'b warning'
+
+DTB=dtbs
+
+# Simon Horms
+# LINUX_SRC=$(BUILDSYS_SOURCES)/renesas
+
+# Geert Uytterhoeven
+# LINUX_SRC=$(BUILDSYS_SOURCES)/renesas-drivers
+
+-include autotools.cross
