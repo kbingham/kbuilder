@@ -47,3 +47,6 @@ $(eval $(call power,energenie-power.banoffee,salvator-xs-m3n))
 $(eval $(call target-helpers,salvator-xs-m3n))
 
 $(eval $(call magnus-farm,9013-draak,9013,r8a77995-draak.dtb))
+
+salvator-x-on: 8camera-on
+salvator-x-off: 8camera-off
