@@ -15,3 +15,7 @@ dtb: linux-dtbs
 all: linux-nanopi4-images
 
 
+flash:
+	sudo bin/upgrade_tool di resource $(LINUX_BUILD)/resource.img
+	sudo bin/upgrade_tool di kernel $(LINUX_BUILD)/kernel.img
+	sudo bin/upgrade_tool RD
