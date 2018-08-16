@@ -28,11 +28,14 @@ LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/*.dtb
 endif
 
 ## Helpers for targets
+LINUX_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(LINUX_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./')
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
-LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config
-
+LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config.v$(LINUX_VERSION)
 
 LINUX_KBUILD=$(LINUX_SRC)
+
+linux-version:
+	@echo $(LINUX_VERSION)
 
 module-current: LINUX_BUILD:=$(LINUX_BUILD)-$(LINUX_CURRENT)
 module-current: LINUX_KBUILD=/lib/modules/$(LINUX_CURRENT)/build
@@ -88,8 +91,8 @@ $(LINUX_BUILD):
 
 linux-savedefconfig:
 	$(LINUX_CMD) savedefconfig
-	@echo "Copying $(LINUX_BUILD)/defconfig to $(BUILDSYS_TARGET_CONF)/kernel.config.defconfig"
-	@cp $(LINUX_BUILD)/defconfig $(BUILDSYS_TARGET_CONF)/kernel.config.defconfig
+	@echo "Copying $(LINUX_BUILD)/defconfig to $(LINUX_CONFIG).defconfig"
+	@cp $(LINUX_BUILD)/defconfig $(LINUX_CONFIG).defconfig
 
 menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	$(LINUX_CMD) $@
