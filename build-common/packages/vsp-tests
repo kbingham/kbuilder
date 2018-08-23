@@ -7,7 +7,7 @@ VSP_TESTS_BUILD=$(VSP_TESTS_SRC)
 
 VSP_TESTS_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/vsp-tests
 
-VSP_TESTS_GIT=git://git.ideasonboard.org/renesas/vsp-tests.git
+VSP_TESTS_GIT=git://git.ideasonboard.com/renesas/vsp-tests.git
 VSP_TESTS_BRANCH?=master
 
 
@@ -17,7 +17,9 @@ $(VSP_TESTS_INSTALL):
 $(VSP_TESTS_SRC):
 	git clone $(VSP_TESTS_GIT) -b $(VSP_TESTS_BRANCH) $@
 
-vsp-tests: vsp-tests-build vsp-tests-install-target
+$(VSP_TESTS_BUILD)/Makefile: $(VSP_TESTS_SRC)
+
+vsp-tests: vsp-tests-build
 
 vsp-tests-build: | $(VSP_TESTS_BUILD)/Makefile
 	$(AT_ENVIRONMENT) \
