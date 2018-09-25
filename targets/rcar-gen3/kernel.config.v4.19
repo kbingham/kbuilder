@@ -2617,6 +2617,7 @@ CONFIG_VIDEO_ADV748X=y
 # CONFIG_VIDEO_TW9906 is not set
 # CONFIG_VIDEO_TW9910 is not set
 # CONFIG_VIDEO_VPX3220 is not set
+CONFIG_VIDEO_MAX9286=y
 
 #
 # Video and audio decoders
@@ -2681,6 +2682,7 @@ CONFIG_VIDEO_ADV7511_CEC=y
 # CONFIG_VIDEO_SMIAPP is not set
 # CONFIG_VIDEO_ET8EK8 is not set
 # CONFIG_VIDEO_S5C73M3 is not set
+CONFIG_VIDEO_RDACM20=y
 
 #
 # Flash devices
