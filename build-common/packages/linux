@@ -41,6 +41,7 @@ module-current: LINUX_BUILD:=$(LINUX_BUILD)-$(LINUX_CURRENT)
 module-current: LINUX_KBUILD=/lib/modules/$(LINUX_CURRENT)/build
 module-current: module
 
+W=W=1
 
 LINUX_CMD = \
 	$(MAKE) -C $(LINUX_KBUILD) \
