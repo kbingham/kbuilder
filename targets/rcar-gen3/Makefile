@@ -18,6 +18,7 @@ TFTP_SERVER:=pi.nakedgeek.co.uk:/srv/tftp/
 
 $(eval $(call power,acme-power,salvator-x))
 $(eval $(call power,acme-power,salvator-xs))
+$(eval $(call power,energenie-power,port1))
 $(eval $(call power,energenie-power,8camera))
 $(eval $(call power,energenie-power,eagle-v3m))
 
@@ -30,5 +31,5 @@ $(eval $(call target-helpers,salvator-xs-m3n))
 
 $(eval $(call magnus-farm,9013-draak,9013,r8a77995-draak.dtb))
 
-salvator-x-on: 8camera-on
-salvator-x-off: 8camera-off
+salvator-x-on: port1-on 8camera-on
+salvator-x-off: port1-off 8camera-off
