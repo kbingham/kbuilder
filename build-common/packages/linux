@@ -29,6 +29,7 @@ endif
 
 ## Helpers for targets
 LINUX_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(LINUX_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./')
+LINUX_SHA1=$(shell cd $(LINUX_SRC) && git describe --always --dirty --long --tags)
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
 LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config.v$(LINUX_VERSION)
 
@@ -36,6 +37,9 @@ LINUX_KBUILD=$(LINUX_SRC)
 
 linux-version:
 	@echo $(LINUX_VERSION)
+
+linux-sha1:
+	@echo $(LINUX_SHA1)
 
 module-current: LINUX_BUILD:=$(LINUX_BUILD)-$(LINUX_CURRENT)
 module-current: LINUX_KBUILD=/lib/modules/$(LINUX_CURRENT)/build
