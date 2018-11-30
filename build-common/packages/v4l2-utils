@@ -41,11 +41,11 @@ v4l2-utils-configure-help: | $(V4L2_UTILS_SRC) $(V4L2_UTILS_BUILD) $(V4L2_UTILS_
 
 v4l2-utils-build: $(V4L2_UTILS_BUILD)/Makefile
 	$(AT_ENVIRONMENT) \
-	$(MAKE) $J -C $(V4L2_UTILS_BUILD)
+	$(MAKE) -j$J -C $(V4L2_UTILS_BUILD)
 
 v4l2-utils-install: $(BINUILS_INSTALL)
 	$(AT_ENVIRONMENT) \
-	$(MAKE) $J -C $(V4L2_UTILS_BUILD) install DESTDIR=$(V4L2_UTILS_INSTALL)
+	$(MAKE) -j$J -C $(V4L2_UTILS_BUILD) install DESTDIR=$(V4L2_UTILS_INSTALL)
 
 v4l2-utils-install-host: V4L2_UTILS_INSTALL=$(BUILDSYS_HOST)
 v4l2-utils-install-host: v4l2-utils-install
