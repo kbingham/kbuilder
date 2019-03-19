@@ -11,6 +11,7 @@ NFSROOT=$(ROOTFS)
 GDB_ARMGDB_OPTS+=-ex 'b internal_error'
 GDB_ARMGDB_OPTS+=-ex 'b warning'
 
+LINUX_DEFCONFIG=bcm2709_defconfig
 DTB=dtbs
 
 # Simon Horms
