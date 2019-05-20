@@ -1,0 +1,43 @@
+#
+# Source rules:
+#   Should define a means to obtain sources (or verify they exist)
+#   and provide a packagename_SRC variable which will be added to the SOURCES target.
+#   A packagename-source helper also links to that.
+#
+
+define sources-local
+
+# $(1) : Package name
+# $(2) : Local Path
+# $(3) : N/A
+
+$(1)_SRC=$(2)
+SOURCES+=$$($(1)_SRC)
+
+$$($(1)_SRC):
+	@$$(warning $$@ not found for package $(1))
+
+$(1)-source: $$($(1)_SRC)
+
+endef
+
+
+define sources-git
+
+# $(1) : Package name
+# $(2) : GIT URL
+# $(3) : {Optional GIT Branch}
+
+$(1)_SRC=$(BUILDSYS_SOURCES)/$(1)
+SOURCES+=$$($(1)_SRC)
+
+ifneq ($(3),)
+	$(1)_BRANCH=-b $(3)
+endif
+
+$$($(1)_SRC):
+	git clone $(2) --depth 1 $$@ $$($(1)_BRANCH)
+
+$(1)-source: $$($(1)_SRC)
+
+endef

@@ -1,21 +1,4 @@
 
-define sources-git
-
-# $(1) : Package name
-# $(2) : GIT URL
-# $(3) : GIT Branch ?
-
-$(1)_SRC=$(BUILDSYS_SOURCES)/$(1)
-SOURCES+=$$($(1)_SRC)
-
-$$($(1)_SRC):
-	git clone $(2) --depth 1 $$@ -b $(3)
-
-$(1)-source: $$($(1)_SRC)
-
-endef
-
-
 define autotools-git
 
 $(1)_BLD=$(BUILDSYS_BUILD)/$(ARCH)/$(1)
