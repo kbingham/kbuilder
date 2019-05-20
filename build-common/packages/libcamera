@@ -1,0 +1,1 @@
+$(eval $(call meson,libcamera,git,git://linuxtv.org/libcamera.git))
