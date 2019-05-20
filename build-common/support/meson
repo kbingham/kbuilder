@@ -1,0 +1,31 @@
+#
+# Initial Meson/Ninja build helper.
+# Does not yet support cross compilation, or configuration flags.
+# Todo: Add cross compilation support
+# Todo: Add configuration flags support
+#
+
+define meson
+
+# Generate $(PKGNAME_SRC):
+$(eval $(call sources-$(2),$(1),$(3),$(4)))
+# Define package build and install rules:
+$(eval $(call package,$(1)))
+
+## Meson Specific
+
+$(1)-install:
+	### FIXME TO NINJA
+	ninja -C $$($(1)_BLD) install DESTDIR=$$($(1)_INSTALL)
+
+$(1)-configure $$($(1)_BLD)/build.ninja: | $$($(1)_SRC) $$($(1)_BLD)
+	cd $$($(1)_BLD) && \
+	meson $$($(1)_SRC) \
+		-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_TOOLCHAIN_FILE) \
+                -DCMAKE_INSTALL_PREFIX=/usr \
+
+$(1): | $$($(1)_BLD)/build.ninja
+	ninja -C $$($(1)_BLD)
+
+endef
+
