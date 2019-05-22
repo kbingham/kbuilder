@@ -18,11 +18,10 @@ $(1)-install:
 	### FIXME TO NINJA
 	ninja -C $$($(1)_BLD) install DESTDIR=$$($(1)_INSTALL)
 
+$(1)-configure: MESONFLAGS+=--reconfigure
 $(1)-configure $$($(1)_BLD)/build.ninja: | $$($(1)_SRC) $$($(1)_BLD)
 	cd $$($(1)_BLD) && \
-	meson $$($(1)_SRC) \
-		-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_TOOLCHAIN_FILE) \
-                -DCMAKE_INSTALL_PREFIX=/usr \
+	meson $$($(1)_SRC) $$(MESONFLAGS)
 
 $(1): | $$($(1)_BLD)/build.ninja
 	ninja -C $$($(1)_BLD)

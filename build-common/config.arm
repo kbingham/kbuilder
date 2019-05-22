@@ -1,1 +1,2 @@
 CROSS_COMPILE?=arm-linux-gnueabihf-
+MESONFLAGS=--cross-file=$(BUILDSYS_COMMON)/meson/arm-linux-gnueabihf
