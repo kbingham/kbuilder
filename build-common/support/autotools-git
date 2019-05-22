@@ -1,10 +1,8 @@
 
 define autotools-git
 
-$(1)_BLD=$(BUILDSYS_BUILD)/$(ARCH)/$(1)
-MKDIRS+=$$($(1)_BLD)
-
 $(eval $(call sources-git,$(1),$(2),$(3)))
+$(eval $(call package,$(1)))
 
 $$($(1)_SRC)/configure: | $$($(1)_SRC) $$($(1)_BLD)
 	$$(AT_ENVIRONMENT) \
@@ -24,23 +22,9 @@ $(1)-configure-help: $$($(1)_SRC)/configure
 	$$(AT_ENVIRONMENT) \
 	$$($(1)_SRC)/configure --help
 
-$(1)-distclean:
-	rm -rf $$($(1)_BLD)
-
-
-$(1)_INSTALL=$$(ROOTFS)
-
 $(1)-install:
 	$$(AT_ENVIRONMENT) \
 	$$(MAKE) -j 1 -C $$($(1)_BLD) install DESTDIR=$$($(1)_INSTALL)
-
-$(1)_PKG_INSTALL=/tmp/kbuilder/$(1)
-
-$(1)-package: $(1)_INSTALL=$$($(1)_PKG_INSTALL)
-$(1)-package: $(1)-install
-	tar -C $$($(1)_PKG_INSTALL) -czvf /tmp/$(1).tgz .
-	@ls -alh /tmp/$(1).tgz
-
 
 $(1): | $$($(1)_BLD)/Makefile
 	$(AT_ENVIRONMENT) \
