@@ -15,13 +15,12 @@ $(eval $(call package,$(1)))
 ## Meson Specific
 
 $(1)-install:
-	### FIXME TO NINJA
-	ninja -C $$($(1)_BLD) install DESTDIR=$$($(1)_INSTALL)
+	DESTDIR=$$($(1)_INSTALL) ninja -C $$($(1)_BLD) install
 
-$(1)-configure: MESONFLAGS+=--reconfigure
+$(1)-configure: $(1)_MESONFLAGS+=--reconfigure
 $(1)-configure $$($(1)_BLD)/build.ninja: | $$($(1)_SRC) $$($(1)_BLD)
 	cd $$($(1)_BLD) && \
-	meson $$($(1)_SRC) $$(MESONFLAGS)
+	meson $$($(1)_SRC) --prefix=/usr $$($(1)_MESONFLAGS) $(MESONFLAGS)
 
 $(1): | $$($(1)_BLD)/build.ninja
 	ninja -C $$($(1)_BLD)
