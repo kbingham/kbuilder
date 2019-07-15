@@ -28,7 +28,7 @@ define sources-git
 # $(2) : GIT URL
 # $(3) : {Optional GIT Branch}
 
-$(1)_SRC=$(BUILDSYS_SOURCES)/$(1)
+$(1)_SRC?=$(BUILDSYS_SOURCES)/$(1)
 SOURCES+=$$($(1)_SRC)
 
 ifneq ($(3),)
