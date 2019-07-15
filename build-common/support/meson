@@ -17,10 +17,10 @@ $(eval $(call package,$(1)))
 $(1)-install:
 	DESTDIR=$$($(1)_INSTALL) ninja -C $$($(1)_BLD) install
 
-$(1)-configure: $(1)_MESONFLAGS+=--reconfigure
+$(1)-configure: $(1)_CONF+=--reconfigure
 $(1)-configure $$($(1)_BLD)/build.ninja: | $$($(1)_SRC) $$($(1)_BLD)
 	cd $$($(1)_BLD) && \
-	meson $$($(1)_SRC) --prefix=/usr $$($(1)_MESONFLAGS) $(MESONFLAGS)
+	meson $$($(1)_SRC) --prefix=/usr --libdir=/usr/lib $$($(1)_CONF) $(MESONFLAGS)
 
 $(1): | $$($(1)_BLD)/build.ninja
 	ninja -C $$($(1)_BLD)
