@@ -64,11 +64,11 @@ LINUX_CMD = \
 		-j$(J)
 
 # Automatically install the linux checkpatch commit hook
-$(LINUX_SRC)/.git/hooks/pre-commit: $(LINUX_SRC)
-	@echo "  [GITHOOKS] Installing linux pre-commit hook"
-	@ln -fsr $(BUILDSYS_ROOT)/build-common/scripts/git-linux-pre-commit.sh $@
+$(LINUX_SRC)/.git/hooks/post-commit: $(LINUX_SRC)
+	@echo "  [GITHOOKS] Installing linux post-commit hook"
+	@ln -fsr $(BUILDSYS_ROOT)/build-common/scripts/git-linux-post-commit.sh $@
 
-linux-%: | $(LINUX_SRC) $(LINUX_SRC)/.git/hooks/pre-commit
+linux-%: | $(LINUX_SRC) $(LINUX_SRC)/.git/hooks/post-commit
 	$(LINUX_CMD) $*
 
 ## Enable full warnings on device tree objects
