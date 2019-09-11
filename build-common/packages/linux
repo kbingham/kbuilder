@@ -108,6 +108,9 @@ linux-savedefconfig:
 
 menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	$(LINUX_CMD) $@
+	$(LINUX_CMD) savedefconfig
+	@echo "Copying $(LINUX_BUILD)/defconfig to $(LINUX_CONFIG).defconfig"
+	@cp $(LINUX_BUILD)/defconfig $(LINUX_CONFIG).defconfig
 
 %_defconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	@echo " [CONFIG] Configuring from $@"
