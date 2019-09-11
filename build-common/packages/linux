@@ -1,5 +1,6 @@
 LINUX_SRC?=$(BUILDSYS_SOURCES)/linux
-LINUX_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/linux
+LINUX_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(LINUX_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./')
+LINUX_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/linux-$(LINUX_VERSION)
 
 LINUX_GIT_REPO  ?= git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
@@ -30,7 +31,6 @@ LINUX_DTB_OVERLAYS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/overlays/*.dtbo
 endif
 
 ## Helpers for targets
-LINUX_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(LINUX_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./')
 LINUX_SHA1=$(shell cd $(LINUX_SRC) && git describe --always --dirty --long --tags)
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
 LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config.v$(LINUX_VERSION)
