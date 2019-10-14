@@ -1,0 +1,6 @@
+ARCH:=aarch64
+
+LINUX_DEFCONFIG=bcm2711_defconfig
+DTB=broadcom/bcm2711-rpi-4-b.dtb
+
+-include autotools.cross
