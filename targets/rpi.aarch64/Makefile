@@ -11,6 +11,8 @@ include $(BUILDSYS_ROOT)/build-common/Makefile
 -include packages/*
 
 $(eval $(call power,energenie-power.banoffee,rpi))
+$(eval $(call power,energenie-power.banoffee,earth))
+$(eval $(call power,energenie-power.banoffee,venus))
 
 dtb: linux-dtbs
 
@@ -43,6 +45,12 @@ rpi-libcamera: libcamera libcamera-package
 rpi-libcamera-native:
 	rsync -arv --exclude build* $(libcamera_SRC) rpi:
 	
+
+venus mercury earth: linux-package
+	echo $@
+	scp linux-package.tgz $@:/tmp/
+	ssh $@ -tC "cd / && sudo tar --no-same-owner -xf /tmp/linux-package.tgz"
+	-ssh $@ -tC "sudo reboot"
 
 
 off:
