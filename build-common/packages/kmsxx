@@ -1,53 +1,10 @@
 ## Build a kmsxx package
 
-KMSXX_SRC?=$(BUILDSYS_SOURCES)/kmsxx
-KMSXX_BUILD=$(BUILDSYS_BUILD)/$(ARCH)/kmsxx
-KMSXX_INSTALL=$(BUILDSYS_INSTALL)/$(ARCH)/kmsxx
+$(eval $(call cmake-git,kmsxx,https://github.com/tomba/kmsxx.git,master))
 
-KMSXX_GIT=https://github.com/tomba/kmsxx.git
-KMSXX_BRANCH?=master
-
-$(KMSXX_BUILD) $(KMSXX_INSTALL):
-	@mkdir -p $@
-
-$(KMSXX_SRC):
-	git clone $(KMSXX_GIT) -b $(KMSXX_BRANCH) $@
-
-$(KMSXX_SRC)/ext/pybind11/CMakeLists.txt: | $(KMSXX_SRC)
-	cd $(KMSXX_SRC) && \
-	git submodule update --init
-
-
-kmsxx-src: | $(KMSXX_SRC) $(KMSXX_SRC)/ext/pybind11/CMakeLists.txt
-
-kmsxx: kmsxx-build kmsxx-install-target
-
-# Configure packages
-
-kmsxx-configure $(KMSXX_BUILD)/Makefile: | kmsxx-src $(KMSXX_BUILD)
-	cd $(KMSXX_BUILD) && \
-	cmake $(KMSXX_SRC) \
-		-DCMAKE_TOOLCHAIN_FILE=/home/linuxembedded/iob/fdp1/buildroot/salvator/host/usr/share/buildroot/toolchainfile.cmake \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_BUILD_TYPE=Debug \
-		-DKMSXX_ENABLE_KMSCUBE=ON \
-		-DKMSXX_ENABLE_PYTHON=ON \
-		-DBUILD_SHARED_LIBS=ON
-
-kmsxx-build: $(KMSXX_BUILD)/Makefile
-	$(MAKE) -j 8 -C $(KMSXX_BUILD)
-
-kmsxx-install:
-	$(MAKE) -C $(KMSXX_BUILD) install DESTDIR=$(KMSXX_INSTALL)
-
-kmsxx-install-host: KMSXX_INSTALL=$(BUILDSYS_HOST)
-kmsxx-install-host: kmsxx-install
-
-kmsxx-install-target: KMSXX_INSTALL=$(ROOTFS)
-kmsxx-install-target: kmsxx-install
-
-kmsxx-install-package: KMSXX_INSTALL=/tmp/kmsxx
-kmsxx-install-package: kmsxx-install
-
-kmsxx-distclean:
-	rm -rf $(KMSXX_BUILD)
+kmsxx_CONF= \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_BUILD_TYPE=Debug \
+	-DKMSXX_ENABLE_KMSCUBE=ON \
+	-DKMSXX_ENABLE_PYTHON=ON \
+	-DBUILD_SHARED_LIBS=ON
