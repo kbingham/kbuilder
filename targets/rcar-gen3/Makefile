@@ -17,7 +17,7 @@ all: dtb linux
 TFTP_SERVER:=pi.nakedgeek.co.uk:/srv/tftp/
 
 $(eval $(call power,acme-power,salvator-x))
-$(eval $(call power,acme-power,salvator-xs))
+$(eval $(call power,energenie-power,salvator-xs))
 $(eval $(call power,energenie-power,port1))
 $(eval $(call power,energenie-power,8camera))
 $(eval $(call power,energenie-power,eagle-v3m))
