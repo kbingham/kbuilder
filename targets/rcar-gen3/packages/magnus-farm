@@ -1,4 +1,4 @@
-MAGNUS_IP:=220.157.214.90
+MAGNUS_IP:=218.219.193.216
 
 define magnus-rsync
 	rsync -e 'ssh -oPort=$(1) -oUser=user' -Pav --progress $(2) $$(MAGNUS_IP):$(3)
