@@ -1,20 +1,6 @@
 ARCH:=aarch64
 
-UBUNTUFS_VERSION=vivid
-UBUNTUFS=/opt/root/ubuntu-$(UBUNTUFS_VERSION).$(ARCH)
-
-TARGET_MOD_DIR:=$(ROOTFS)
-NFSROOT=$(ROOTFS)
-
-LINUX_DEFCONFIG=bcmrpi3_defconfig
-DTB=broadcom/bcm2837-rpi-3-b-plus.dtb
-
-# Simon Horms
-# LINUX_SRC=$(BUILDSYS_SOURCES)/renesas
-
-# Geert Uytterhoeven
-# LINUX_SRC=$(BUILDSYS_SOURCES)/renesas-drivers
-
-LINUX_SRC=$(BUILDSYS_SOURCES)/linux-5.3
+LINUX_DEFCONFIG=bcm2711_defconfig
+DTB=broadcom/bcm2711-rpi-4-b.dtb
 
 -include autotools.cross
