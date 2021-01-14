@@ -1,0 +1,100 @@
+until nc -zvw 1 192.168.0.101 22; do sleep 1; done
+ssh salvator-xs -X -C "uname -a";
+Linux salvator-xs 5.11.0-rc2-arm64-renesas-11803-gcb3cfbf79aff #21 SMP PREEMPT Wed Jan 13 21:54:40 GMT 2021 aarch64 aarch64 aarch64 GNU/Linux
+ssh -X salvator-xs -tC \
+	"cd du/kms-tests/tests && for t in kms-test-*.py; do cat /proc/meminfo | grep Cma; echo \$t; ./\$t; done;"
+CmaTotal:         262144 kB
+CmaFree:           18072 kB
+kms-test-allplanes.py
+Testing composition on CRTC 73: SKIP
+Testing composition on CRTC 74: Traceback (most recent call last):
+  File "./kms-test-allplanes.py", line 87, in <module>
+    AllPlanesTest().execute()
+  File "/home/kbingham/du/kms-tests/tests/kmstest.py", line 397, in execute
+    self.main()
+  File "./kms-test-allplanes.py", line 52, in main
+    fb = pykms.DumbFramebuffer(self.card, mode.hdisplay, mode.vdisplay, "XR24")
+ValueError: DRM_IOCTL_MODE_CREATE_DUMB failed: Cannot allocate memory
+CmaTotal:         262144 kB
+CmaFree:           18072 kB
+kms-test-brxalloc.py
+SKIP
+CmaTotal:         262144 kB
+CmaFree:           18072 kB
+kms-test-connectors.py
+Testing connector VGA-1: Testing connector VGA-1: SUCCESS
+Testing connector HDMI-A-1: Testing connector HDMI-A-1: SUCCESS
+Testing connector HDMI-A-2: Testing connector HDMI-A-2: SUCCESS
+CmaTotal:         262144 kB
+CmaFree:           18072 kB
+kms-test-crc.py
+Testing CRC calculation on CRTC 73: SKIP
+Testing CRC calculation on CRTC 74: Traceback (most recent call last):
+  File "./kms-test-crc.py", line 111, in <module>
+    CRCTest().execute()
+  File "/home/kbingham/du/kms-tests/tests/kmstest.py", line 397, in execute
+    self.main()
+  File "./kms-test-crc.py", line 52, in main
+    fb = pykms.DumbFramebuffer(self.card, mode.hdisplay, mode.vdisplay, "XR24")
+ValueError: DRM_IOCTL_MODE_CREATE_DUMB failed: Cannot allocate memory
+CmaTotal:         262144 kB
+CmaFree:           18072 kB
+kms-test-formats.py
+Testing plane formats: Testing plane formats: SUCCESS
+CmaTotal:         262144 kB
+CmaFree:           15768 kB
+kms-test-legacy-modeset.py
+Testing legacy mode set on connector VGA-1: Testing legacy mode set on connector VGA-1: SUCCESS
+Testing legacy mode set on connector HDMI-A-1: Traceback (most recent call last):
+  File "./kms-test-legacy-modeset.py", line 62, in <module>
+    LegacyModeSetTest().execute()
+  File "/home/kbingham/du/kms-tests/tests/kmstest.py", line 397, in execute
+    self.main()
+  File "./kms-test-legacy-modeset.py", line 43, in main
+    fb = pykms.DumbFramebuffer(self.card, mode.hdisplay, mode.vdisplay, "XR24")
+ValueError: DRM_IOCTL_MODE_CREATE_DUMB failed: Cannot allocate memory
+CmaTotal:         262144 kB
+CmaFree:           15768 kB
+kms-test-modes.py
+Testing modes on connector VGA-1: Testing modes on connector VGA-1: 1/26Testing modes on connector VGA-1: 2/26Traceback (most recent call last):
+  File "./kms-test-modes.py", line 68, in <module>
+    ModesTest().execute()
+  File "/home/kbingham/du/kms-tests/tests/kmstest.py", line 397, in execute
+    self.main()
+  File "./kms-test-modes.py", line 61, in main
+    self.test_mode(connector, crtc, modes[i])
+  File "./kms-test-modes.py", line 19, in test_mode
+    fb = pykms.DumbFramebuffer(self.card, mode.hdisplay, mode.vdisplay, "XR24")
+ValueError: DRM_IOCTL_MODE_CREATE_DUMB failed: Cannot allocate memory
+CmaTotal:         262144 kB
+CmaFree:           15768 kB
+kms-test-modeset.py
+Testing atomic mode set on connector VGA-1: Testing atomic mode set on connector VGA-1: SUCCESS
+Testing atomic mode set on connector HDMI-A-1: Traceback (most recent call last):
+  File "./kms-test-modeset.py", line 61, in <module>
+    ModeSetTest().execute()
+  File "/home/kbingham/du/kms-tests/tests/kmstest.py", line 397, in execute
+    self.main()
+  File "./kms-test-modeset.py", line 43, in main
+    fb = pykms.DumbFramebuffer(self.card, mode.hdisplay, mode.vdisplay, "XR24")
+ValueError: DRM_IOCTL_MODE_CREATE_DUMB failed: Cannot allocate memory
+CmaTotal:         262144 kB
+CmaFree:           15768 kB
+kms-test-pageflip.py
+Testing page flip on connector VGA-1: Testing page flip on connector VGA-1: SUCCESS
+Testing page flip on connector HDMI-A-1: Traceback (most recent call last):
+  File "./kms-test-pageflip.py", line 121, in <module>
+    PageFlipTest().execute()
+  File "/home/kbingham/du/kms-tests/tests/kmstest.py", line 397, in execute
+    self.main()
+  File "./kms-test-pageflip.py", line 86, in main
+    self.fbs.append(pykms.DumbFramebuffer(self.card, mode.hdisplay, mode.vdisplay, "XR24"))
+ValueError: DRM_IOCTL_MODE_CREATE_DUMB failed: Cannot allocate memory
+CmaTotal:         262144 kB
+CmaFree:           15768 kB
+kms-test-planeposition.py
+Testing plane positioning boundaries: Testing plane positioning boundaries: SUCCESS
+CmaTotal:         262144 kB
+CmaFree:           15768 kB
+kms-test-routing.py
+SKIP
