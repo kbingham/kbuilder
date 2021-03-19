@@ -21,10 +21,12 @@ $(eval $(call power,energenie-power,salvator-xs))
 $(eval $(call power,energenie-power,port1))
 $(eval $(call power,energenie-power,8camera))
 $(eval $(call power,energenie-power,eagle-v3m))
+$(eval $(call power,energenie-power,falcon-v3u))
 
 $(eval $(call target-helpers,salvator-x))
 $(eval $(call target-helpers,salvator-xs))
 $(eval $(call target-helpers,eagle-v3m))
+$(eval $(call target-helpers,falcon-v3u))
 
 $(eval $(call power,energenie-power.banoffee,salvator-xs-m3n))
 $(eval $(call target-helpers,salvator-xs-m3n))
