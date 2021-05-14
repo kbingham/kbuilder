@@ -1,0 +1,5 @@
+ARCH:=riscv
+SUBARCH:=riscv64
+
+LINUX_DEFAULT_TARGET=linux-Image
+DTB=dtbs

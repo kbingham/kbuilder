@@ -1,0 +1,3 @@
+CROSS_COMPILE?=riscv64-linux-gnu-
+CMAKE_TOOLCHAIN_FILE=$(BUILDSYS_COMMON)/cmake/ubuntu-riscv64-linux-gnu.cmake
+MESONFLAGS+=--cross-file=$(BUILDSYS_COMMON)/meson/riscv64-linux-gnu
