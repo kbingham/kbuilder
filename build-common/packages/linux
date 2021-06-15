@@ -16,7 +16,7 @@ $(LINUX_SRC):
 	git clone $(LINUX_GIT_REPO) $(LINUX_SRC)
 
 
-J?=8
+J?=$(shell nproc)
 
 ## Linux uses a different naming format than everyone else for ARM64
 ifeq ($(ARCH),aarch64)
