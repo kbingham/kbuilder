@@ -53,7 +53,7 @@ module-current: module
 W=W=1
 
 LINUX_CMD = \
-	$(MAKE) -C $(LINUX_KBUILD) \
+	/usr/bin/time -v $(MAKE) -C $(LINUX_KBUILD) \
 		O=$(LINUX_BUILD) \
 		KCONFIG_CONFIG=$(LINUX_CONFIG) \
 		ARCH=$(LINUX_ARCH) \
