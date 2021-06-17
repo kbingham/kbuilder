@@ -14,7 +14,7 @@ dtb: linux-dtbs
 
 all: dtb linux
 
-TFTP_SERVER:=pi.nakedgeek.co.uk:/srv/tftp/
+TFTP_SERVER:=pi@lab.linuxembedded.co.uk:/srv/tftp/
 
 $(eval $(call power,acme-power,salvator-x))
 $(eval $(call power,energenie-power,salvator-xs))
