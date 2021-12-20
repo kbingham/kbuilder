@@ -73,6 +73,8 @@ linux-%: | $(LINUX_SRC) $(LINUX_SRC)/.git/hooks/post-commit
 
 ## Enable full warnings on device tree objects
 dtbs: W=W=1
+## Validate all DTBs
+dtbs: linux-dtbs_check
 
 .PHONY:	vmlinux zImage
 uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: | $(LINUX_SRC) $(LINUX_BUILD)
