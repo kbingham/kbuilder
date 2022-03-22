@@ -23,7 +23,8 @@ J?=$(shell nproc)
 ifeq ($(ARCH),aarch64)
 LINUX_ARCH=arm64
 LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/*/*.dtb
-LINUX_DTB_OVERLAYS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/*/overlays/*.dtbo
+  # Apparently not overridden?
+LINUX_DTB_OVERLAYS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/overlays/*.dtbo
 else
 LINUX_ARCH?=$(ARCH)
 LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/*.dtb
