@@ -1,0 +1,37 @@
+
+# $1 target name
+# $2 remote
+define fram
+$(1)-on:
+	ssh $(2) power on
+
+$(1)-off:
+	ssh $(2) power off
+
+$(1)-acc-on:
+	ssh $(2) acc on
+
+$(1)-acc-off:
+	ssh $(2) acc off
+
+$(1)-reboot:
+	ssh $(2) power off
+	sleep 1;
+	ssh $(2) power on
+
+$(1)-help:
+$(1)-reset:
+$(1)-lock:
+$(1)-release:
+$(1)-console:
+$(1)-%:
+	@ssh -t $(2) $$*
+
+tftp-$(1):
+	rsync -Pavz --progress $$(LINUX_IMAGES) $(2):
+	rsync -Pavz --progress $$(LINUX_DTBS) $(2):
+
+$(1) run-$(1) $(1)-run: $(1)-off linux dtb tftp-$(1) $(1)-on
+
+endef
+
