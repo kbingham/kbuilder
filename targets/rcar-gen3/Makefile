@@ -31,6 +31,7 @@ $(eval $(call target-helpers,salvator-xs-m3n))
 
 $(eval $(call magnus-farm,9013-draak,9013,r8a77995-draak.dtb))
 
+$(eval $(call fram,ebisu,ebisu@gate.glider.be))
 $(eval $(call fram,falcon-v3u,falcon-v3u@lab.linuxembedded.co.uk))
 
 salvator-x-on: port1-on 8camera-on
