@@ -115,7 +115,7 @@ menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 
 defconfig $(BUILDSYS_TARGET_CONF)/kernel.config: | $(LINUX_SRC) $(LINUX_BUILD)
 	@echo "Making DEFCONFIG to create $(LINUX_CONFIG) from $(DEFCONFIG)"
-	$(MAKE) $(DEFCONFIG)
+	$(LINUX_CMD) $@
 
 # Exported Defines for external packages to utilise
 
