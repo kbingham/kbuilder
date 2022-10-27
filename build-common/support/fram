@@ -27,9 +27,10 @@ $(1)-console:
 $(1)-%:
 	@ssh -t $(2) $$*
 
-tftp-$(1):
-	rsync -Pavz --progress $$(LINUX_IMAGES) $(2):
-	rsync -Pavz --progress $$(LINUX_DTBS) $(BOOTSCRIPT) $(2):
+
+tftp-$(1) $(1)-tftp:
+	@echo "Sending $$^"
+	rsync -Pavz --progress $$^ $(2):
 
 $(1) run-$(1) $(1)-run: $(1)-off linux dtb tftp-$(1) $(1)-on
 
