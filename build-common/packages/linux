@@ -38,6 +38,7 @@ LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config.v$(LINUX_VERSION)
 
 LINUX_ZIMAGE:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/zImage
 
+LINUX_PACKAGE_TGZ:=linux-package-v$(LINUX_VERSION).tgz
 
 LINUX_KBUILD=$(LINUX_SRC)
 
@@ -151,4 +152,4 @@ linux-package: .linux-package-prep dtb linux modules modules_install
 	@cp $(LINUX_IMAGES) 		$(LINUX_PKG_INSTALL)/boot/
 	@cp $(LINUX_DTBS) 		$(LINUX_PKG_INSTALL)/boot/
 	@cp $(LINUX_DTB_OVERLAYS)	$(LINUX_PKG_INSTALL)/boot/overlays/
-	@tar -C $(LINUX_PKG_INSTALL) -czf linux-package.tgz ./
+	@tar -C $(LINUX_PKG_INSTALL) -czf $(LINUX_PACKAGE_TGZ) ./
