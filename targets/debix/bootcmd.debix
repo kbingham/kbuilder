@@ -1,0 +1,15 @@
+setenv bootargs console=ttymxc1,115200 root=/dev/mmcblk1p2 rootwait rw cma=256M
+
+## Split
+#tftp 40480000 debix/Image;
+#echo "USING THE EVK DTB!!!!!!!!"
+#tftp 43000000 debix/imx8mp-evk.dtb;
+#tftp 43000000 debix/imx8mp-debix-model-a.dtb;
+#booti 40480000 - 43000000
+
+echo "Loading debix/debix.itb"
+## FIT
+tftp 0x48000000 debix/debix.itb
+
+echo "Booting config 0x48000000#debix-imx219.dtb"
+bootm 0x48000000#debix-imx219.dtb

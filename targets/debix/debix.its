@@ -1,0 +1,112 @@
+/dts-v1/;
+
+/ {
+        description = "Debix 4G i.MX8MP FIT Image";
+        #address-cells = <1>;
+
+        images {
+                kernel {
+                        description = "Kernel";
+                        data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/Image");
+                        type = "kernel";
+                        arch = "arm64";
+                        os = "linux";
+                        compression = "none";
+                        load = <0x40480000>;
+                        entry = <0x40480000>;
+                        hash {
+                                algo = "sha1";
+                        };
+                };
+                fdt {
+                        description = "DTB";
+                        data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a.dtb");
+                        type = "flat_dt";
+                        arch = "arm64";
+                        compression = "none";
+                        load = <0x43000000>;
+                        entry = <0x43000000>;
+                        hash {
+                                algo = "sha1";
+                        };
+                };
+
+		isp0 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-isp0.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43100000>;
+		};
+
+		isp1 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-isp1.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43104000>;
+		};
+
+		imx219 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a-csi0-imx219.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43108000>;
+		};
+
+		imx335 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a-io-imx335.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43108000>;
+		};
+
+		imx477 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a-csi0-imx477.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43108000>;
+		};
+
+		imx519 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a-csi0-imx519.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43108000>;
+		};
+        };
+
+        configurations {
+                default = "standard";
+                standard {
+                        description = "Standard Boot";
+                        kernel = "kernel";
+                        fdt = "fdt";
+                        hash {
+                                algo = "sha1";
+                        };
+                };
+
+		debix-imx219.dtb {
+			description = "Debix 2g with IMX219";
+			kernel = "kernel";
+			fdt = "fdt", "isp0", "isp1", "imx219";
+		};
+
+		debix-imx335.dtb {
+			description = "Debix 2g with IMX335";
+			kernel = "kernel";
+			fdt = "fdt", "isp0", "isp1", "imx335";
+		};
+
+		debix-imx477.dtb {
+			description = "Debix 2g with IMX477";
+			kernel = "kernel";
+			fdt = "fdt", "isp0", "isp1", "imx477";
+		};
+
+		debix-imx519.dtb {
+			description = "Debix 2g with IMX519";
+			kernel = "kernel";
+			fdt = "fdt", "isp0", "imx519";
+		};
+        };
+};
