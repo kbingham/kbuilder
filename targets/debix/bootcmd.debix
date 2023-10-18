@@ -11,5 +11,5 @@ echo "Loading debix/debix.itb"
 ## FIT
 tftp 0x48000000 debix/debix.itb
 
-echo "Booting config 0x48000000#debix-imx219.dtb"
-bootm 0x48000000#debix-imx219.dtb
+echo "Booting config 0x48000000#debix-gc2145.dtb"
+bootm 0x48000000#debix-gc2145.dtb
