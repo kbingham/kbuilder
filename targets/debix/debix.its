@@ -72,6 +72,13 @@
 			arch = "arm64";
 			load = <0x43108000>;
 		};
+
+		gc2145 {
+			data = /incbin/("../../objects/aarch64/debix/linux/arch/arm64/boot/dts/freescale/imx8mp-debix-model-a-io-gc2145.dtbo");
+			type = "flat_dt";
+			arch = "arm64";
+			load = <0x43108000>;
+		};
         };
 
         configurations {
@@ -107,6 +114,12 @@
 			description = "Debix 2g with IMX519";
 			kernel = "kernel";
 			fdt = "fdt", "isp0", "imx519";
+		};
+
+		debix-gc2145.dtb {
+			description = "Debix 2g with GC2145";
+			kernel = "kernel";
+			fdt = "fdt", "isp0", "gc2145";
 		};
         };
 };
