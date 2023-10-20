@@ -1,0 +1,109 @@
+arch=arm
+baudrate=115200
+board=imx8mp_evk
+board_name=EVK
+board_rev=iMX8MP
+boot_a_script=load ${devtype} ${devnum}:${distro_bootpart} ${scriptaddr} ${prefix}${script}; sou
+rce ${scriptaddr}
+boot_efi_binary=load ${devtype} ${devnum}:${distro_bootpart} ${kernel_addr_r} efi/boot/bootaa64.
+efi; if fdt addr ${fdt_addr_r}; then bootefi ${kernel_addr_r} ${fdt_addr_r};else bootefi ${kerne
+l_addr_r} ${fdtcontroladdr};fi
+boot_efi_bootmgr=if fdt addr ${fdt_addr_r}; then bootefi bootmgr ${fdt_addr_r};else bootefi boot
+mgr;fi
+boot_extlinux=sysboot ${devtype} ${devnum}:${distro_bootpart} any ${scriptaddr} ${prefix}${boot_
+syslinux_conf}
+boot_fdt=try
+boot_fit=no
+boot_net_usb_start=usb start
+boot_prefixes=/ /boot/
+boot_script_dhcp=boot.scr.uimg
+boot_scripts=boot.scr.uimg boot.scr
+boot_syslinux_conf=extlinux/extlinux.conf
+boot_targets=usb0 mmc1 mmc2 
+bootcmd=run distro_bootcmd;run bsp_bootcmd
+bootcmd_mfg=run mfgtool_args;if iminfo ${initrd_addr}; then if test ${tee} = yes; then bootm ${t
+ee_addr} ${initrd_addr} ${fdt_addr}; else booti ${loadaddr} ${initrd_addr} ${fdt_addr}; fi; else
+ echo "Run fastboot ..."; fastboot 0; fi;
+bootcmd_mmc1=devnum=1; run mmc_boot
+bootcmd_mmc2=devnum=2; run mmc_boot
+bootcmd_usb0=devnum=0; run usb_boot
+bootdelay=0
+bootm_size=0x10000000
+bootscript=echo Running bootscript from mmc ...; source
+bsp_bootcmd=echo Running BSP bootcmd ...; mmc dev ${mmcdev}; if mmc rescan; then if run loadboot
+script; then run bootscript; else if run loadimage; then run mmcboot; else run netboot; fi; fi; 
+fi;
+bsp_script=boot.scr
+console=ttymxc1,115200
+cpu=armv8
+distro_bootcmd=for target in ${boot_targets}; do run bootcmd_${target}; done
+efi_dtb_prefixes=/ /dtb/ /dtb/current/
+emmc_dev=2
+eth1addr=10:07:23:6d:dd:a5
+ethact=ethernet@30bf0000
+ethaddr=10:07:23:6d:dd:a8
+ethprime=eth1
+fastboot_dev=mmc1
+fdt_addr=0x43000000
+fdt_addr_r=0x43000000
+fdt_high=0xffffffffffffffff
+fdtcontroladdr=bceec9a0
+fdtfile=imx8mp-evk.dtb
+image=Image
+initrd_addr=0x43800000
+initrd_high=0xffffffffffffffff
+jh_clk= 
+jh_mmcboot=setenv fdtfile imx8mp-evk-root.dtb;setenv jh_clk clk_ignore_unused mem=2048MB; if run
+ loadimage; then run mmcboot; else run jh_netboot; fi; 
+jh_netboot=setenv fdtfile imx8mp-evk-root.dtb; setenv jh_clk clk_ignore_unused mem=2048MB; run n
+etboot; 
+kboot=booti 
+kernel_addr_r=0x40480000
+load_efi_dtb=load ${devtype} ${devnum}:${distro_bootpart} ${fdt_addr_r} ${prefix}${efi_fdtfile}
+loadaddr=0x40480000
+loadbootscript=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bsp_script};
+loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} ${fdtfile}
+loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}
+mfgtool_args=setenv bootargs console=${console},${baudrate} rdinit=/linuxrc clk_ignore_unused 
+mmc_boot=if mmc dev ${devnum}; then devtype=mmc; run scan_dev_for_boot_part; fi
+mmcargs=setenv bootargs ${jh_clk} console=${console} root=${mmcroot}
+mmcautodetect=yes
+mmcboot=echo Booting from mmc ...; run mmcargs; if test ${boot_fit} = yes || test ${boot_fit} = 
+try; then bootm ${loadaddr}; else if run loadfdt; then booti ${loadaddr} - ${fdt_addr_r}; else e
+cho WARN: Cannot load the DT; fi; fi;
+mmcdev=1
+mmcpart=1
+mmcroot=/dev/mmcblk1p2 rootwait rw
+nandfit_part=yes
+netargs=setenv bootargs ${jh_clk} console=${console} root=/dev/nfs ip=dhcp nfsroot=${serverip}:$
+{nfsroot},v3,tcp
+netboot=echo Booting from net ...; run netargs;  if test ${ip_dyn} = yes; then setenv get_cmd dh
+cp; else setenv get_cmd tftp; fi; ${get_cmd} ${loadaddr} ${image}; if test ${boot_fit} = yes || 
+test ${boot_fit} = try; then bootm ${loadaddr}; else if ${get_cmd} ${fdt_addr_r} ${fdtfile}; the
+n booti ${loadaddr} - ${fdt_addr_r}; else echo WARN: Cannot load the DT; fi; fi;
+scan_dev_for_boot=echo Scanning ${devtype} ${devnum}:${distro_bootpart}...; for prefix in ${boot
+_prefixes}; do run scan_dev_for_extlinux; run scan_dev_for_scripts; done;run scan_dev_for_efi;
+scan_dev_for_boot_part=part list ${devtype} ${devnum} -bootable devplist; env exists devplist ||
+ setenv devplist 1; for distro_bootpart in ${devplist}; do if fstype ${devtype} ${devnum}:${dist
+ro_bootpart} bootfstype; then run scan_dev_for_boot; fi; done; setenv devplist
+scan_dev_for_efi=setenv efi_fdtfile ${fdtfile}; for prefix in ${efi_dtb_prefixes}; do if test -e
+ ${devtype} ${devnum}:${distro_bootpart} ${prefix}${efi_fdtfile}; then run load_efi_dtb; fi;done
+;run boot_efi_bootmgr;if test -e ${devtype} ${devnum}:${distro_bootpart} efi/boot/bootaa64.efi; 
+then echo Found EFI removable media binary efi/boot/bootaa64.efi; run boot_efi_binary; echo EFI 
+LOAD FAILED: continuing...; fi; setenv efi_fdtfile
+scan_dev_for_extlinux=if test -e ${devtype} ${devnum}:${distro_bootpart} ${prefix}${boot_syslinu
+x_conf}; then echo Found ${prefix}${boot_syslinux_conf}; run boot_extlinux; echo SCRIPT FAILED: 
+continuing...; fi
+scan_dev_for_scripts=for script in ${boot_scripts}; do if test -e ${devtype} ${devnum}:${distro_
+bootpart} ${prefix}${script}; then echo Found U-Boot script ${prefix}${script}; run boot_a_scrip
+t; echo SCRIPT FAILED: continuing...; fi; done
+scriptaddr=0x43500000
+sd_dev=1
+serial#=152ec800d69de984
+soc=imx8m
+soc_type=imx8mp
+splashimage=0x50000000
+usb_boot=usb start; if usb dev ${devnum}; then devtype=usb; run scan_dev_for_boot_part; fi
+vendor=freescale
+
+

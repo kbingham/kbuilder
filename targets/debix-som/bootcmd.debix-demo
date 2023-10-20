@@ -1,0 +1,6 @@
+echo "Hello Demo World"
+
+setenv bootargs console=ttymxc1,115200 root=/dev/mmcblk1p2 rootwait rw
+
+fatload mmc 1:1 0x43080000 demo/debix.itb
+bootm 0x43080000#debix-imx219.dtb

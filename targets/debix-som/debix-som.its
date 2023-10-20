@@ -1,0 +1,55 @@
+/dts-v1/;
+
+/ {
+        description = "Debix 4G i.MX8MP FIT Image";
+        #address-cells = <1>;
+
+        images {
+                kernel {
+                        description = "Kernel";
+                        data = /incbin/("../../objects/aarch64/debix-som/linux/arch/arm64/boot/Image.gz");
+                        type = "kernel";
+                        arch = "arm64";
+                        os = "linux";
+                        compression = "gzip";
+                        load = <0x40480000>;
+                        
+                        hash-1 {
+                                algo = "sha256";
+                        };
+
+
+                };
+
+                fdt-imx8mp-debix-som-a-bmb-08.dtb {
+                        description = "Flattened Device Tree blob";
+                        data = /incbin/("imx8mp-debix-som-a-bmb-08.dtb");
+                        type = "flat_dt";
+                        arch = "arm64";
+                        compression = "none";
+                        
+                        hash-1 {
+                                algo = "sha256";
+                        };
+                };
+        };
+
+        configurations {
+                default = "imx8mp-debix-som-a-bmb-08.dtb";
+                imx8mp-debix-som-a-bmb-08.dtb {
+                        description = "1 Linux kernel, FDT blob";
+                        kernel = "kernel";
+                        fdt = "fdt-imx8mp-debix-som-a-bmb-08.dtb";
+                        
+                        compatible = "polyhex,imx8mp-debix-som-a-bmb-08";
+                        signature-1 {
+                                algo = "sha256,rsa4096";
+                                key-name-hint = "";
+                                sign-images = "kernel", "fdt";
+                                signer-name = "None";
+                                signer-version = "None";
+                        };
+                };
+	};
+
+};
