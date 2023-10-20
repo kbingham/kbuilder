@@ -1,0 +1,35 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image.gz
+
+TARGET_MOD_DIR:=$(ROOTFS)
+NFSROOT=$(ROOTFS)
+
+
+GDB_ARMGDB_OPTS+=-ex 'b internal_error'
+GDB_ARMGDB_OPTS+=-ex 'b warning'
+
+DTB=freescale/imx8mp-debix-model-a.dtb
+DTB+=freescale/imx8mp-debix-som-a-bmb-08.dtb
+DTB+=freescale/imx8mp-isp1.dtbo
+DTB+=freescale/imx8mp-isp2.dtbo
+DTB+=freescale/imx8mp-debix-som-a-isp0-imx335.dtbo
+DTB+=freescale/imx8mp-debix-som-a-isp1-imx335.dtbo
+
+# DTB+=freescale/imx8mp-evk.dtb
+# DTB+=freescale/imx8mp-debix-model-a-io-imx219.dtbo
+# DTB+=freescale/imx8mp-debix-model-a-io-imx335.dtbo
+# DTB+=freescale/imx8mp-debix-model-a-csi0-imx477.dtbo
+# DTB+=freescale/imx8mp-debix-model-a-csi0-imx519.dtbo
+
+DEFCONFIG=defconfig
+
+BOOTSCRIPT=bootcmd.debix.scr
+
+# Simon Horms
+# LINUX_SRC=$(BUILDSYS_SOURCES)/renesas
+
+# Geert Uytterhoeven
+# LINUX_SRC=$(BUILDSYS_SOURCES)/renesas-drivers
+
+-include autotools.cross

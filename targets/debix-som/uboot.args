@@ -1,0 +1,9 @@
+setenv bootdir 'eagle-v3m'
+setenv bootfile 'Image'
+setenv fdtfile 'r8a77970-eagle.dtb'
+setenv loadaddr '0x48080000'
+setenv fdtaddr '0x48f00000'
+setenv nfsroot '/opt/root/eagle-v3m'
+setenv netargs 'setenv bootargs loglevel=7 no_console_suspend=1 debug root=/dev/nfs nfsroot=${serverip}:${nfsroot},nolock,nfsvers=3 rw ip=dhcp'
+setenv tboot 'tftpboot ${loadaddr} ${bootdir}/${bootfile}; tftpboot ${fdtaddr} ${bootdir}/${fdtfile}; run netargs; booti ${loadaddr} - ${fdtaddr}'
+
