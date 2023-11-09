@@ -1,0 +1,26 @@
+echo "Booting from bootcmd.kakip.scr..."
+
+setenv serverip 192.168.0.128
+setenv nfsip 192.168.0.33:192.168.0.128::255.255.255.0::eth0:on
+setenv nfsroot /srv/nfs/kakip-new
+setenv bootargs root=/dev/nfs ip=${nfsip} nfsroot=${serverip}:${nfsroot},v3,tcp rootwait
+
+printenv bootargs
+
+setenv fdt_addr 0x51000000
+setenv fdtoverlay_addr 0x52000000
+setenv fdtimx258overlay_addr 0x53000000
+
+setenv loadaddr 0x49200000
+tftp ${loadaddr} kakip/Image
+tftp ${fdt_addr} kakip/kakip-es1.dtb
+fdt addr ${fdt_addr}
+
+tftp ${fdtimx258overlay_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx258-cam1.dtbo
+tftp ${fdtoverlay_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx708-cam0.dtbo
+
+fdt resize
+fdt apply ${fdtoverlay_addr}
+fdt apply ${fdtimx258overlay_addr}
+
+booti 0x49200000 - 0x51000000

@@ -14,6 +14,10 @@ dtb: linux-dtbs
 
 all: dtb linux
 
+%.scr: %
+	mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
+		-n 'Execute uImage.bin' -d $^ $@
+
 TFTP_SERVER:=pi@lab.linuxembedded.co.uk:/srv/tftp/
 
 $(eval $(call power,acme-power,salvator-x))
@@ -34,6 +38,10 @@ $(eval $(call fram,ebisu,ebisu@gate.glider.be))
 $(eval $(call fram,falcon-v3u,falcon-v3u@lab.linuxembedded.co.uk))
 $(eval $(call fram,whitehawk-v4h,whitehawk-v4h@lab.linuxembedded.co.uk))
 $(eval $(call fram,spider-s4,spider-s4@lab.linuxembedded.co.uk))
+$(eval $(call fram,kakip,kakip@lab.linuxembedded.co.uk))
+
+
+tftp-kakip: $(LINUX_IMAGES) $(LINUX_DTBS) bootcmd.kakip.scr
 
 salvator-x-on: port1-on 8camera-on
 salvator-x-off: port1-off 8camera-off
