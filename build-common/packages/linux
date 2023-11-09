@@ -148,8 +148,9 @@ LINUX_PKG_INSTALL=/tmp/kbuilder/linux/
 linux-package: TARGET_MOD_DIR:=$(LINUX_PKG_INSTALL)
 linux-package: .linux-package-prep dtb linux modules modules_install
 	@echo "Creating linux-package"
+	@mkdir -p $(LINUX_PKG_INSTALL)/boot/firmware
 	@mkdir -p $(LINUX_PKG_INSTALL)/boot/overlays
-	@cp $(LINUX_IMAGES) 		$(LINUX_PKG_INSTALL)/boot/
-	@cp $(LINUX_DTBS) 		$(LINUX_PKG_INSTALL)/boot/
+	@cp $(LINUX_IMAGES) 		$(LINUX_PKG_INSTALL)/boot/firmware/
+	@cp $(LINUX_DTBS) 		$(LINUX_PKG_INSTALL)/boot/firmware/
 	@cp $(LINUX_DTB_OVERLAYS)	$(LINUX_PKG_INSTALL)/boot/overlays/
 	@tar -C $(LINUX_PKG_INSTALL) -czf $(LINUX_PACKAGE_TGZ) ./
