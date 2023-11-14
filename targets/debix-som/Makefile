@@ -25,6 +25,9 @@ $(BOOTSCRIPT): bootcmd.debix
 	@echo "TOUCHING $@" Rebuild?
 	touch $@
 
+Image.gz: $(LINUX_BUILD)/arch/arm64/boot/Image.gz
+	cp $(LINUX_BUILD)/arch/arm64/boot/Image.gz .
+
 %.itb: %.its
 	echo " ************************ Build $@ from $^"
 	mkimage -f $^ $@
@@ -41,7 +44,7 @@ imx8mp-debix-som-a-bmb-08.dtb: dtb
        		-i $(LINUX_BUILD)/arch/arm64/boot/dts/$(DEBIX_SOM_DTB) \
 		$(addprefix $(LINUX_BUILD)/arch/arm64/boot/dts/,$(DEBIX_SOM_DTBOS))
 
-fitImage-beluga.bin: imx8mp-debix-som-a-bmb-08.dtb debix-som.itb
+fitImage-beluga.bin: imx8mp-debix-som-a-bmb-08.dtb Image.gz debix-som.itb
 	mv debix-som.itb $@
 
 test: rm-itb linux dtb debix-som.itb debix-som
