@@ -7,7 +7,7 @@
         images {
                 kernel {
                         description = "Kernel";
-                        data = /incbin/("../../objects/aarch64/debix-som/linux/arch/arm64/boot/Image.gz");
+                        data = /incbin/("Image.gz");
                         type = "kernel";
                         arch = "arm64";
                         os = "linux";
