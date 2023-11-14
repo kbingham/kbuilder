@@ -15,6 +15,8 @@ DTB+=freescale/imx8mp-isp1.dtbo
 DTB+=freescale/imx8mp-isp2.dtbo
 DTB+=freescale/imx8mp-debix-som-a-isp0-imx335.dtbo
 DTB+=freescale/imx8mp-debix-som-a-isp1-imx335.dtbo
+DTB+=freescale/imx8mp-debix-som-a-isp0-imx283.dtbo
+DTB+=freescale/imx8mp-debix-som-a-isp1-imx283.dtbo
 
 # DTB+=freescale/imx8mp-evk.dtb
 # DTB+=freescale/imx8mp-debix-model-a-io-imx219.dtbo
