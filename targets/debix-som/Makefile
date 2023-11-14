@@ -31,7 +31,9 @@ $(BOOTSCRIPT): bootcmd.debix
 
 DEBIX_SOM_DTB:=freescale/imx8mp-debix-som-a-bmb-08.dtb
 DEBIX_SOM_DTBOS+=freescale/imx8mp-isp1.dtbo
-DEBIX_SOM_DTBOS+=freescale/imx8mp-debix-som-a-isp0-imx335.dtbo
+DEBIX_SOM_DTBOS+=freescale/imx8mp-debix-som-a-isp0-imx283.dtbo
+DEBIX_SOM_DTBOS+=freescale/imx8mp-isp2.dtbo
+DEBIX_SOM_DTBOS+=freescale/imx8mp-debix-som-a-isp1-imx335.dtbo
 #DEBIX_SOM_DTBS+=freescale/imx8mp-isp2.dtbo
 
 imx8mp-debix-som-a-bmb-08.dtb: dtb
