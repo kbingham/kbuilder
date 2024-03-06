@@ -1,0 +1,5 @@
+setenv bootargs root=/dev/nfs rw nfsroot=192.168.0.16:/opt/root/c308,,nolock,nfsvers=3 ip=dhcp
+tftp 0x48080000 c308/Image.gz;
+tftp $fdtaddr c308/amlogic-c3-c308l-aw419.dtb;
+echo "Loaded image and DTB. Booting..."
+booti 0x48080000 - $fdtaddr
