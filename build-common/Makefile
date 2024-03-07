@@ -21,15 +21,6 @@ TARGET:=$(shell basename $(BUILDSYS_TARGET_CONF))
 all:
 
 
-## Provide useful information if asked
-
-help:
-	@echo "Buildsystem Configuration"
-	@echo "ARCH : " $(ARCH)
-	@echo "SUBARCH : " $(SUBARCH)
-	@echo "BUILDSYS_TARGET_CONF: " $(BUILDSYS_TARGET_CONF)
-
-
 
 ## Manage the target configuration file
 
@@ -69,3 +60,13 @@ export PATH:=$(BUILDSYS_HOST)/usr/bin/:$(PATH)
 ## Parallel Build Support
 
 J?=$(shell nproc)
+
+## Provide useful information if asked
+core-help:
+	@echo "Buildsystem Configuration"
+	@echo "ARCH : " $(ARCH)
+	@echo "SUBARCH : " $(SUBARCH)
+	@echo "BUILDSYS_TARGET_CONF: " $(BUILDSYS_TARGET_CONF)
+
+help: core-help $(HELP)
+

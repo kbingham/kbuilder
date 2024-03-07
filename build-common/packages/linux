@@ -154,3 +154,11 @@ linux-package: .linux-package-prep dtb linux modules modules_install
 	@cp $(LINUX_DTBS) 		$(LINUX_PKG_INSTALL)/boot/firmware/
 	@cp $(LINUX_DTB_OVERLAYS)	$(LINUX_PKG_INSTALL)/boot/overlays/
 	@tar -C $(LINUX_PKG_INSTALL) -czf $(LINUX_PACKAGE_TGZ) ./
+
+kbuild-linux-help:
+	@echo "LINUX_IMAGES		: $(LINUX_IMAGES)"
+	@echo "LINUX_DTBS		: $(LINUX_DTBS)"
+	@echo "LINUX_DTB_OVERLAYS	: $(LINUX_DTB_OVERLAYS)"
+
+HELP+=kbuild-linux-help
+
