@@ -1,0 +1,13 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image
+
+TARGET_MOD_DIR:=$(ROOTFS)
+NFSROOT=$(ROOTFS)
+
+DTB=freescale/imx8mp-phyboard-pollux-rdk.dtb
+DEFCONFIG=defconfig
+
+BOOTSCRIPT=bootcmd.debix.scr
+
+-include autotools.cross
