@@ -14,6 +14,8 @@ $(eval $(call power,energenie-power.banoffee,rpi))
 $(eval $(call power,energenie-power.banoffee,earth))
 $(eval $(call power,energenie-power.banoffee,venus))
 
+$(eval $(call fram,beehive,beehive@lab.linuxembedded.co.uk))
+
 dtb: linux-dtbs
 
 all: dtb linux
