@@ -55,11 +55,11 @@ venus mercury earth: linux-package
 	-ssh $@ -tC "sudo reboot"
 
 
-beehive: linux-package
+beehive-package: linux-package
 	echo $@
-	scp $(LINUX_PACKAGE_TGZ) $@:/tmp/
-	ssh $@ -tC "cd / && sudo tar --keep-directory-symlink --no-same-owner -xhf /tmp/$(LINUX_PACKAGE_TGZ)"
-	-ssh $@ -tC "sudo reboot"
+	scp $(LINUX_PACKAGE_TGZ) beehive:/tmp/
+	ssh beehive -tC "cd / && sudo tar --keep-directory-symlink --no-same-owner -xhf /tmp/$(LINUX_PACKAGE_TGZ)"
+	-ssh beehive -tC "sudo reboot"
 
 
 off:
