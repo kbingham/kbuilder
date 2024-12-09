@@ -97,6 +97,8 @@ linux_help: $(LINUX_SRC)
 
 module:
 	$(LINUX_CMD) modules M=$(M)
+
+module_install:
 	$(LINUX_CMD) modules_install M=$(M)
 
 
