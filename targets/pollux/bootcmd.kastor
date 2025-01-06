@@ -1,0 +1,40 @@
+echo Loading Kastor from kbuilder ...
+
+setenv board kastor
+setenv serverip 192.168.0.128
+
+#setenv nfsip 192.168.0.239:192.168.0.128::255.255.255.0::eth0:on
+setenv nfsip dhcp
+
+setenv nfsroot /srv/nfs/${board}/nfs/
+#setenv nfsroot /srv/nfs/gromit
+setenv nfsroot /srv/nfs/kastor
+setenv nfsroot /srv/nfs/debian-bullseye
+setenv nfsroot=/srv/nfs/ubuntu-base-24.10/,v4,rsize=65536,wsize=65536,tcp
+
+setenv ip ip=dhcp
+setenv root root=/dev/nfs
+setenv nfsroot nfsroot=${serverip}:${nfsroot},v4
+
+# Load the kernel/fit image
+# HACK DTB has to be located at an 8-byte offset, and currently the FIT is aligning to 4.
+# Load at a 4 byte offset!
+# oldaddr 0x48000000
+setenv loadaddr 0x58000000
+setenv fdtaddr 0x48000000
+
+tftp ${loadaddr} ${board}/Image
+tftp ${fdtaddr} ${board}/imx8mp-phyboard-pollux-rdk.dtb
+
+#setenv nfsroot /srv/nfs/debian-bullsye/
+
+# NFS Root
+setenv bootargs console=${console},${baudrate} ${root} ${ip} ${nfsroot} rw
+
+# echo "MMC Root"
+# setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk1p2 fsck.repair=yes rootwait rw
+
+# Boot and Go!
+# bootm ${loadaddr}#conf-nemo.dtb
+
+booti ${loadaddr} - ${fdtaddr}
