@@ -14,6 +14,12 @@ dtb: $(DTB)
 
 all: dtb linux
 
-$(eval $(call fram,pollux,pollux@lab.linuxembedded.co.uk))
+%.scr: %
+	mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
+		-n 'Execute uImage.bin' -d $^ $@
 
-tftp-pollux: $(LINUX_IMAGES) $(LINUX_DTBS)
+$(eval $(call fram,pollux,pollux@lab.linuxembedded.co.uk))
+$(eval $(call fram,kastor,kastor@lab.linuxembedded.co.uk))
+
+tftp-pollux: $(LINUX_IMAGES) $(LINUX_DTBS) bootcmd.scr
+tftp-kastor: $(LINUX_IMAGES) $(LINUX_DTBS) bootcmd.kastor.scr
