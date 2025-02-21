@@ -83,6 +83,9 @@ dtbs: linux-dtbs_check
 uImage vmlinux bzImage zImage xipImage dtbs modules modules_install oldconfig: | $(LINUX_SRC) $(LINUX_BUILD)
 	$(LINUX_CMD) $@
 
+/%.dtb:
+	@echo Ignoring request to build fully qualified path of DTB
+
 # Linux knows how to make DTB's
 %.dtb: $(LINUX_SRC)
 	$(LINUX_CMD) W=1 $@
