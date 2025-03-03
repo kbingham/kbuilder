@@ -1,9 +1,10 @@
 echo "Booting from bootcmd.kakip.scr..."
 
 setenv serverip 192.168.0.128
-setenv nfsip 192.168.0.33:192.168.0.128::255.255.255.0::eth0:on
-setenv nfsroot /srv/nfs/kakip-new
-setenv bootargs root=/dev/nfs ip=${nfsip} nfsroot=${serverip}:${nfsroot},v3,tcp rootwait
+setenv ip ip=dhcp
+setenv nfsroot nfsroot=/srv/nfs/kakip-bookworm/,nfsvers=4,rsize=65536,wsize=65536,tcp
+
+setenv bootargs root=/dev/nfs ${ip} ${nfsroot} rw rootwait
 
 printenv bootargs
 
