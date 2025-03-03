@@ -3,6 +3,8 @@ SUBARCH:=armv8
 LINUX_DEFAULT_TARGET=linux-Image
 
 #DTB=kakip-es1.dtb
+DTB=renesas/r9a09g057h48-kakip.dtb
+DTB=renesas/r9a09g057h48-kakip-rpi-7inchv2.dtb
 
 # Simon Horms
 # LINUX_SRC=$(BUILDSYS_SOURCES)/renesas

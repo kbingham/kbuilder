@@ -10,7 +10,7 @@ include $(BUILDSYS_ROOT)/build-common/Makefile
 
 -include packages/*
 
-dtb: linux-dtbs
+dtb: $(DTBS)
 
 all: dtb linux
 

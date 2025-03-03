@@ -13,14 +13,14 @@ setenv fdtimx258overlay_addr 0x53000000
 
 setenv loadaddr 0x49200000
 tftp ${loadaddr} kakip/Image
-tftp ${fdt_addr} kakip/kakip-es1.dtb
+tftp ${fdt_addr} kakip/r9a09g057h48-kakip-rpi-7inchv2.dtb
 fdt addr ${fdt_addr}
 
-tftp ${fdtimx258overlay_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx258-cam1.dtbo
-tftp ${fdtoverlay_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx708-cam0.dtbo
+#tftp ${fdtimx258overlay_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx258-cam1.dtbo
+#tftp ${fdtoverlay_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx708-cam0.dtbo
 
-fdt resize
-fdt apply ${fdtoverlay_addr}
-fdt apply ${fdtimx258overlay_addr}
+#fdt resize
+#fdt apply ${fdtoverlay_addr}
+#fdt apply ${fdtimx258overlay_addr}
 
 booti 0x49200000 - 0x51000000
