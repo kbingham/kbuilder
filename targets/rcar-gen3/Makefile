@@ -43,5 +43,22 @@ $(eval $(call fram,kakip,kakip@lab.linuxembedded.co.uk))
 
 tftp-kakip: $(LINUX_IMAGES) $(LINUX_DTBS) bootcmd.kakip.scr
 
+show-dtb:
+	@echo $(LINUX_DTBS)
+
+report_deps:
+	@echo "*********************************************"
+	@echo Images:
+	@echo $(LINUX_IMAGES) | xargs realpath --relative-to $(LINUX_BUILD)
+	@echo "*********************************************"
+	@echo DTBS:
+	@echo $(LINUX_DTBS) | xargs realpath --relative-to $(LINUX_BUILD)
+	@echo "*********************************************"
+
+kakip-off:
+	echo "Disabled kakip-power off"
+kakip-on:
+	echo "disabled kakip-power on"
+
 salvator-x-on: port1-on 8camera-on
 salvator-x-off: port1-off 8camera-off
