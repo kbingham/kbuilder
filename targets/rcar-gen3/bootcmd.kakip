@@ -23,14 +23,11 @@ tftp ${loadaddr} kakip/Image
 #tftp ${fdt_addr} kakip/kakip-es1.dtb
 #tftp ${fdt_addr} kakip/r9a09g057h48-kakip.dtb
 
-#echo "Booting Kakip 7\" v2 display"
-#tftp ${fdt_addr} kakip/r9a09g057h48-kakip-rpi-7inchv2.dtb
+echo "Booting Kakip 7\" v2 display"
+tftp ${fdt_addr} kakip/r9a09g057h48-kakip-rpi-7inchv2.dtb
 
 #echo "Booting IMX708 Direct overlay DTB"
 #tftp ${fdt_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-imx708-cam0.dtb
-
-echo "Booting Kakip with 7inch display and IMX708"
-tftp ${fdt_addr} kakip/r9a09g057h44-rzv2h-kakip-es1-rpi-display-imx708-cam0.dtb
 
 fdt addr ${fdt_addr}
 
