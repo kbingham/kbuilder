@@ -1,0 +1,9 @@
+
+# Bootscripts generation
+
+%.scr: %
+	@echo "[Bootscript] Generating $@ from $^"
+	@echo
+	mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
+		-n 'Execute uImage.bin' -d $^ $@
+
