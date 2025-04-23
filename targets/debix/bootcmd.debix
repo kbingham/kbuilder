@@ -1,15 +1,63 @@
-setenv bootargs console=ttymxc1,115200 root=/dev/mmcblk1p2 rootwait rw cma=256M
+#setenv bootargs console=ttymxc1,115200 root=/dev/mmcblk1p2 rootwait rw cma=256M
+
+setenv console 	console=ttymxc1,115200
+setenv cma	cma=256M
+setenv root	root=/dev/nfs
+#setenv nfsroot	nfsroot=/srv/nfs/debian-bullseye/,v3,tcp
+#setenv nfsroot	nfsroot=/srv/nfs/ubuntu-base-24.10/,v3,tcp
+#setenv nfsroot	nfsroot=/srv/nfs/ubuntu-base-24.10/,v4,rsize=65536,wsize=65536,tcp
+setenv nfsroot	nfsroot=/srv/nfs/debian-bookworm/,v4,rsize=65536,wsize=65536,tcp
+
+setenv ip	ip=dhcp
+setenv systemd	rd.systemd.show_status=false rd.udev.log_priority=3
+
+setenv no_hash_pointers	no_hash_pointers
+
+# nfsroot defaults to the dhcp server as server IP
+#setenv bootargs ${console} ${cma} root=/dev/nfs ip=dhcp nfsroot=${nfsroot},v3,tcp rw rootwait
+setenv bootargs ${console} ${cma} ${ip} ${root} ${nfsroot} rw rootwait ${systemd} ${no_hash_pointers}
+
+echo "Kernel command line arguments:"
+printenv bootargs
 
 ## Split
-#tftp 40480000 debix/Image;
-#echo "USING THE EVK DTB!!!!!!!!"
-#tftp 43000000 debix/imx8mp-evk.dtb;
-#tftp 43000000 debix/imx8mp-debix-model-a.dtb;
-#booti 40480000 - 43000000
+tftp 40600000 debix/Image;
+tftp 46000000 debix/imx8mp-debix-model-a.dtb;
+#tftp 46500000 debix/imx8mp-debix-model-a-io-gc2145.dtbo
 
-echo "Loading debix/debix.itb"
+# Set FDT and apply chosen overlay
+
+echo "Setting up DTB..."
+fdt addr 46000000
+fdt resize 131072
+
+echo "Applying overlays..."
+tftp 46400000 debix/imx8mp-isp0.dtbo
+fdt apply 46400000
+
+#tftp 46400000 debix/imx8mp-isp1.dtbo
+#fdt apply 46400000
+
+# A directly connected overlay
+#tftp 46500000 debix/imx8mp-debix-model-a-io-imx219.dtbo
+#fdt apply 46500000
+
+# Connected through the mux
+# tftp 46500000 debix/imx8mp-debix-model-a-io-camera-mux-4port.dtbo
+# fdt apply 46500000
+
+# Test the Debix 500a / 200a
+tftp 46500000 debix/imx8mp-debix-model-a-csi0-ov5640.dtbo
+#tftp 46500000 debix/imx8mp-debix-model-a-csi0-gc2145.dtbo
+fdt apply 46500000
+
+echo "Booting ..."
+booti 40600000 - 46000000
+
+
+#echo "Loading debix/debix.itb"
 ## FIT
-tftp 0x48000000 debix/debix.itb
+#tftp 0x48000000 debix/debix.itb
 
-echo "Booting config 0x48000000#debix-gc2145.dtb"
-bootm 0x48000000#debix-gc2145.dtb
+#echo "Booting config 0x48000000#debix-imx219.dtb"
+#bootm 0x48000000#debix-gc2145.dtb
