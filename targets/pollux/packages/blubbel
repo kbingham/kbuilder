@@ -1,0 +1,23 @@
+
+blubbel.dtb: blubbel.dts
+	@gcc -E \
+		-Wp,-MMD,.blubbel.dtb.d.pre.tmp \
+		-nostdinc \
+		-I $(LINUX_SRC)/scripts/dtc/include-prefixes \
+		-I $(LINUX_SRC)/arch/arm64/boot/dts/ \
+		-undef \
+		-D__DTS__ \
+		-x assembler-with-cpp \
+		-o .blubbel.dtb.dts.tmp \
+		blubbel.dts ;
+
+	@dtc -o blubbel.dtb \
+		-b 0 \
+		-i$(LINUX_SRC)/arch/arm64/boot/dts/ \
+		-i$(LINUX_SRC)/arch/arm64/boot/dts/freescale/ \
+		-i$(LINUX_SRC)/scripts/dtc/include-prefixes \
+		-@ \
+		-d .blubbel.dtb.d.dtc.tmp \
+		.blubbel.dtb.dts.tmp ;
+
+	@cat .blubbel.dtb.d.pre.tmp .blubbel.dtb.d.dtc.tmp > .blubbel.dtb.d 

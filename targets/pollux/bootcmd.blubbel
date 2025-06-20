@@ -1,0 +1,45 @@
+echo Loading Blubbel from kbuilder ... Again check 1 2
+
+setenv serverip 192.168.0.128
+
+#setenv nfsip 192.168.0.239:192.168.0.128::255.255.255.0::eth0:on
+setenv nfsip dhcp
+
+setenv nfsroot /opt/root/pollux/nfs/
+
+setenv ip ip=dhcp
+setenv root root=/dev/nfs
+setenv nfsroot nfsroot=${serverip}:${nfsroot},v4
+
+# Load the kernel/fit image
+# HACK DTB has to be located at an 8-byte offset, and currently the FIT is aligning to 4.
+# Load at a 4 byte offset!
+# oldaddr 0x48000000
+setenv loadaddr 0x58000000
+tftp ${loadaddr} blubbel/Image.gz
+
+# Support decompression
+setenv kernel_comp_size ${filesize}
+setenv kernel_comp_addr_r 0x50000000
+
+setenv fdtaddr 0x48000000
+tftp ${fdtaddr} blubbel/blubbel.dtb
+
+#setenv nfsroot /srv/nfs/debian-bullsye/
+
+# NFS Root
+#
+#setenv bootargs ${console_interface} ${root} ${ip} ${nfsroot} 
+#
+
+
+echo "MMC Root"
+setenv bootargs ip=off loglevel=8 root=/dev/mmcblk0p2 rw rootfstype=ext4 rootrw=/dev/mmcblk0p3 
+
+# echo "MMC Root"
+# setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk1p2 fsck.repair=yes rootwait rw
+
+# Boot and Go!
+# bootm ${loadaddr}#conf-nemo.dtb
+
+booti ${loadaddr} - ${fdtaddr}
