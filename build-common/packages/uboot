@@ -1,0 +1,100 @@
+UBOOT_SRC?=$(BUILDSYS_SOURCES)/uboot
+UBOOT_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(UBOOT_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./')
+UBOOT_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/uboot-$(UBOOT_VERSION)
+
+UBOOT_GIT_REPO  ?= https://github.com/u-boot/u-boot.git
+
+UBOOT_DEFAULT_TARGET?=zImage
+
+.PHONY: uboot
+uboot: $(UBOOT_DEFAULT_TARGET)
+
+## Obtain the sources:
+
+$(UBOOT_SRC):
+	git clone $(UBOOT_GIT_REPO) $(UBOOT_SRC)
+
+
+J?=$(shell nproc)
+
+## Linux uses a different naming format than everyone else for ARM64
+
+## Helpers for targets
+UBOOT_SHA1=$(shell cd $(UBOOT_SRC) && git describe --always --dirty --long --tags)
+UBOOT_CONFIG:=$(BUILDSYS_TARGET_CONF)/uboot.config.v$(UBOOT_VERSION)
+
+UBOOT_PACKAGE_TGZ:=uboot-package-v$(UBOOT_VERSION).tgz
+UBOOT_KBUILD=$(UBOOT_SRC)
+
+uboot-version:
+	@echo $(UBOOT_VERSION)
+
+uboot-sha1:
+	@echo $(UBOOT_SHA1)
+
+UBOOT_CMD = \
+	/usr/bin/time -v $(MAKE) -C $(UBOOT_KBUILD) \
+		O=$(UBOOT_BUILD) \
+		KCONFIG_CONFIG=$(UBOOT_CONFIG) \
+		ARCH=$(UBOOT_ARCH) \
+		CROSS_COMPILE=$(CROSS_COMPILE) \
+		INSTALL_MOD_PATH=$(TARGET_MOD_DIR) \
+		$(UBOOT_BUILD_EXTRA) \
+		DTC_FLAGS=-@ \
+		$(W) \
+		-j$(J)
+
+# Automatically install the linux checkpatch commit hook
+$(UBOOT_SRC)/.git/hooks/post-commit: $(UBOOT_SRC)
+	@echo "  [GITHOOKS] Installing linux post-commit hook"
+	@ln -fsr $(BUILDSYS_ROOT)/build-common/scripts/git-linux-post-commit.sh $@
+
+uboot-%: | $(UBOOT_SRC) $(UBOOT_SRC)/.git/hooks/post-commit
+	$(UBOOT_CMD) $*
+
+uboot_help: $(UBOOT_SRC)
+	$(UBOOT_CMD) help
+
+## Configuration and Build Preparation
+$(UBOOT_BUILD):
+	@mkdir -p $@
+
+uboot-savedefconfig:
+	$(UBOOT_CMD) savedefconfig
+	@echo "Copying $(UBOOT_BUILD)/defconfig to $(UBOOT_CONFIG).defconfig"
+	@cp $(UBOOT_BUILD)/defconfig $(UBOOT_CONFIG).defconfig
+
+uboot-menuconfig: $(UBOOT_SRC) $(UBOOT_BUILD)
+	$(UBOOT_CMD) menuconfig
+	$(UBOOT_CMD) savedefconfig
+	@echo "Copying $(UBOOT_BUILD)/defconfig to $(UBOOT_CONFIG).defconfig"
+	@cp $(UBOOT_BUILD)/defconfig $(UBOOT_CONFIG).defconfig
+
+uboot-%_defconfig: $(UBOOT_SRC) $(UBOOT_BUILD)
+	@echo " [CONFIG] Configuring from $(patsubst uboot-%,%,$@)"
+	$(UBOOT_CMD) $(patsubst uboot-%,%,$@)
+
+uboot-distclean:
+	rm -r $(UBOOT_BUILD)
+
+UBOOT_PKG_INSTALL=/tmp/kbuilder/uboot/
+
+.uboot-package-prep:
+	rm -rf $(UBOOT_PKG_INSTALL)
+	mkdir -p $(UBOOT_PKG_INSTALL)
+
+uboot-package: TARGET_MOD_DIR:=$(UBOOT_PKG_INSTALL)
+uboot-package: .uboot-package-prep
+	@echo "Creating linux-package"
+	echo @cp $(UBOOT_DTB_OVERLAYS)	$(UBOOT_PKG_INSTALL)/boot/overlays/
+	@tar -C $(UBOOT_PKG_INSTALL) -czf $(UBOOT_PACKAGE_TGZ) ./
+
+kbuild-uboot-help:
+	@echo
+	@echo U-Boot: $(UBOOT_GIT_REPO)
+	@echo "UBOOT_IMAGES		: $(UBOOT_IMAGES)"
+	@echo "UBOOT_DTBS		: $(UBOOT_DTBS)"
+	@echo "UBOOT_DTB_OVERLAYS	: $(UBOOT_DTB_OVERLAYS)"
+
+HELP+=kbuild-uboot-help
+
