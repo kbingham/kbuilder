@@ -1,0 +1,4 @@
+$(eval $(call makefile-git,dt-overlays,https://git.uk.ideasonboard.com/camera/dt-overlays.git,master))
+
+dt-overlays_ENVIRONMENT = LINUX=$(LINUX_SRC)
+
