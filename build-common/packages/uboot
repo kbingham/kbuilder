@@ -17,8 +17,6 @@ $(UBOOT_SRC):
 
 J?=$(shell nproc)
 
-## Linux uses a different naming format than everyone else for ARM64
-
 ## Helpers for targets
 UBOOT_SHA1=$(shell cd $(UBOOT_SRC) && git describe --always --dirty --long --tags)
 UBOOT_CONFIG:=$(BUILDSYS_TARGET_CONF)/uboot.config.v$(UBOOT_VERSION)
@@ -44,12 +42,7 @@ UBOOT_CMD = \
 		$(W) \
 		-j$(J)
 
-# Automatically install the linux checkpatch commit hook
-$(UBOOT_SRC)/.git/hooks/post-commit: $(UBOOT_SRC)
-	@echo "  [GITHOOKS] Installing linux post-commit hook"
-	@ln -fsr $(BUILDSYS_ROOT)/build-common/scripts/git-linux-post-commit.sh $@
-
-uboot-%: | $(UBOOT_SRC) $(UBOOT_SRC)/.git/hooks/post-commit
+uboot-%: | $(UBOOT_SRC)
 	$(UBOOT_CMD) $*
 
 uboot_help: $(UBOOT_SRC)
@@ -76,18 +69,6 @@ uboot-%_defconfig: $(UBOOT_SRC) $(UBOOT_BUILD)
 
 uboot-distclean:
 	rm -r $(UBOOT_BUILD)
-
-UBOOT_PKG_INSTALL=/tmp/kbuilder/uboot/
-
-.uboot-package-prep:
-	rm -rf $(UBOOT_PKG_INSTALL)
-	mkdir -p $(UBOOT_PKG_INSTALL)
-
-uboot-package: TARGET_MOD_DIR:=$(UBOOT_PKG_INSTALL)
-uboot-package: .uboot-package-prep
-	@echo "Creating linux-package"
-	echo @cp $(UBOOT_DTB_OVERLAYS)	$(UBOOT_PKG_INSTALL)/boot/overlays/
-	@tar -C $(UBOOT_PKG_INSTALL) -czf $(UBOOT_PACKAGE_TGZ) ./
 
 kbuild-uboot-help:
 	@echo
