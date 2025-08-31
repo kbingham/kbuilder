@@ -29,5 +29,9 @@ $(1): | $$($(1)_BLD)/Makefile
 	$$($(1)_ENVIRONMENT) \
 	$$(MAKE) -C $$($(1)_BLD)
 
+$(1)-%: | $$($(1)_BLD)/Makefile
+	$(AT_ENVIRONMENT) \
+	$$($(1)_ENVIRONMENT) \
+	$$(MAKE) -C $$($(1)_BLD) $$*
 endef
 
