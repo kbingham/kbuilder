@@ -2,4 +2,5 @@ $(eval $(call makefile-git,dt-overlays,https://git.uk.ideasonboard.com/camera/dt
 
 dt-overlays_ENVIRONMENT = LINUX=$(LINUX_SRC)
 
+dt-overlays-clean:
 dt-overlays-test:
