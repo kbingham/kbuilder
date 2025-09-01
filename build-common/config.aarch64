@@ -1,5 +1,5 @@
 
-ifneq ($(ARCH),aarch64)
+ifneq ($(ARCH),$(shell uname -m))
 CROSS_COMPILE?=aarch64-linux-gnu-
 CMAKE_TOOLCHAIN_FILE=$(BUILDSYS_COMMON)/cmake/ubuntu-aarch64-linux-gnu.cmake
 MESONFLAGS+=--cross-file=$(BUILDSYS_COMMON)/meson/aarch64-linux-gnu
