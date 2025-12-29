@@ -36,6 +36,9 @@ LINUX_SHA1=$(shell cd $(LINUX_SRC) && git describe --always --dirty --long --tag
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
 LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config.v$(LINUX_VERSION)
 
+LINUX_FRAGMENTS_DIR := $(BUILDSYS_TARGET_CONF)/fragments
+LINUX_FRAGMENTS     := $(wildcard $(LINUX_FRAGMENTS_DIR)/*.cfg)
+
 LINUX_ZIMAGE:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/zImage
 
 LINUX_PACKAGE_TGZ:=linux-package-v$(LINUX_VERSION).tgz
@@ -124,9 +127,21 @@ menuconfig: $(LINUX_SRC) $(LINUX_BUILD)
 	@echo " [CONFIG] Configuring from $@"
 	$(LINUX_CMD) $@
 
-defconfig $(BUILDSYS_TARGET_CONF)/kernel.config: | $(LINUX_SRC) $(LINUX_BUILD)
-	@echo "Making DEFCONFIG to create $(LINUX_CONFIG) from $(DEFCONFIG)"
-	$(LINUX_CMD) $@
+.PHONY: linux-fragments
+linux-fragments: $(LINUX_CONFIG)
+	# Merge required fragments
+	@KCONFIG_CONFIG=$(LINUX_CONFIG) \
+		$(LINUX_SRC)/scripts/kconfig/merge_config.sh \
+			-m $(LINUX_CONFIG) $(LINUX_FRAGMENTS)
+
+	# Resolve dependencies
+	@$(LINUX_CMD) olddefconfig
+
+.PHONY: defconfig
+defconfig $(LINUX_CONFIG): | $(LINUX_SRC) $(LINUX_BUILD)
+	@echo "Generating Linux config..."
+	@echo "Making $(LINUX_CONFIG) from defconfig"
+	$(LINUX_CMD) defconfig
 
 # Exported Defines for external packages to utilise
 
