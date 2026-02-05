@@ -1,0 +1,12 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image.gz
+
+#DTB=freescale/imx8mp-debix-model-a.dtb
+#DTB+=freescale/imx8mp-evk.dtb
+#DTB+=freescale/imx8mp-isp0.dtbo
+#DTB+=freescale/imx8mp-isp1.dtbo
+
+DEFCONFIG=defconfig
+
+BOOTSCRIPT=bootcmd.visioncb.scr
