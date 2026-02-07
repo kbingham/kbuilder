@@ -34,6 +34,8 @@ endif
 ## Helpers for targets
 LINUX_SHA1=$(shell cd $(LINUX_SRC) && git describe --always --dirty --long --tags)
 LINUX_IMAGES:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/*Image
+LINUX_IMAGE:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/Image
+LINUX_IMAGE_GZ:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/Image.gz
 LINUX_CONFIG:=$(BUILDSYS_TARGET_CONF)/kernel.config.v$(LINUX_VERSION)
 
 LINUX_FRAGMENTS_DIR := $(BUILDSYS_TARGET_CONF)/fragments
