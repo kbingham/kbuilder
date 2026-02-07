@@ -14,7 +14,11 @@ dtb: linux-dtbs
 
 all: dtb linux
 
-tftp-visioncb8m: $(BOOTSCRIPT)
+tftp-visioncb8m: $(BOOTSCRIPT) $(LINUX_IMAGE)
+
+to-debix: linux
+	scp $(LINUX_IMAGE) user@debix.lab.linuxembedded.co.uk:/tmp/
+	ssh user@debix.lab.linuxembedded.co.uk -tC "sudo mv /tmp/Image /boot/; sudo reboot"
 
 boot-notes:
 	@echo "	setenv ethaddr ce:1f:45:14:74:5c; dhcp && source"
@@ -23,3 +27,4 @@ boot-notes:
 visioncb8m-on: boot-notes
 
 $(eval $(call fram,visioncb8m,visioncb8m@lab.linuxembedded.co.uk))
+$(eval $(call fram,debix,debix@lab.linuxembedded.co.uk))
