@@ -26,5 +26,12 @@ boot-notes:
 
 visioncb8m-on: boot-notes
 
+vision: linux tftp-visioncb8m visioncb8m-reboot
+
+SPACE_DTB=$(LINUX_BUILD)/arch/arm64/boot/dts/freescale/spacesom-8mplus-cb-adv.dtb
+
+tftp-spacecb: bootcmd.spacecb.scr $(LINUX_IMAGE) $(SPACE_DTB)
+
 $(eval $(call fram,visioncb8m,visioncb8m@lab.linuxembedded.co.uk))
+$(eval $(call fram,spacecb,spacecb@lab.linuxembedded.co.uk))
 $(eval $(call fram,debix,debix@lab.linuxembedded.co.uk))
