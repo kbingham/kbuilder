@@ -1,0 +1,9 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image.gz
+
+DTB=freescale/imx95-15x15-frdm.dtb
+
+DEFCONFIG=defconfig
+
+BOOTSCRIPT=bootcmd.frdm95.scr
