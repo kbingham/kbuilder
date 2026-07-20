@@ -48,25 +48,13 @@ rpi-libcamera-native:
 	rsync -arv --exclude build* $(libcamera_SRC) rpi:
 	
 
-venus mercury earth: linux-package
-	echo $@
-	scp linux-package.tgz $@:/tmp/
-	ssh $@ -tC "cd / && sudo tar --keep-directory-symlink --no-same-owner -xhf /tmp/linux-package.tgz"
-	-ssh $@ -tC "sudo reboot"
+beehive saule venus mercury earth: linux-package
+# direct connection
+	$(eval T := admin@$@.lab.linuxembedded.co.uk)
+	
+# via FRAM
+# $(eval T := $@)
 
-
-beehive-package: linux-package
-	echo $@
-	scp $(LINUX_PACKAGE_TGZ) beehive:/tmp/
-	ssh beehive -tC "cd / && sudo tar --keep-directory-symlink --no-same-owner -xhf /tmp/$(LINUX_PACKAGE_TGZ)"
-	-ssh beehive -tC "sudo reboot"
-
-
-off:
-	energenie-power.banoffee rpi off
-
-on:
-	energenie-power.banoffee rpi on
-
-serial:
-	serial rpi
+	scp $(LINUX_PACKAGE_TGZ) $(T):/tmp/
+	ssh $(T) -tC "cd / && sudo tar --keep-directory-symlink --no-same-owner -xhf /tmp/$(LINUX_PACKAGE_TGZ)"
+	-ssh $(T) -tC "sudo reboot"
