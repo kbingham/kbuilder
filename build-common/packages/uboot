@@ -1,5 +1,11 @@
 UBOOT_SRC?=$(BUILDSYS_SOURCES)/uboot
-UBOOT_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(UBOOT_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./')
+
+ifneq ($(wildcard $(UBOOT_SRC)/Makefile),)
+  UBOOT_VERSION:=$(shell grep -E "^VERSION|^PATCHLEVEL" $(UBOOT_SRC)/Makefile | sed -e s'/.* = //' | sed -e 'N;s/\n/./'
+else
+  UBOOT_VERSION:="0"
+endif
+
 UBOOT_BUILD?=$(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)/uboot-$(UBOOT_VERSION)
 
 UBOOT_GIT_REPO  ?= https://github.com/u-boot/u-boot.git
@@ -57,13 +63,13 @@ uboot-savedefconfig:
 	@echo "Copying $(UBOOT_BUILD)/defconfig to $(UBOOT_CONFIG).defconfig"
 	@cp $(UBOOT_BUILD)/defconfig $(UBOOT_CONFIG).defconfig
 
-uboot-menuconfig: $(UBOOT_SRC) $(UBOOT_BUILD)
+uboot-menuconfig: | $(UBOOT_SRC) $(UBOOT_BUILD)
 	$(UBOOT_CMD) menuconfig
 	$(UBOOT_CMD) savedefconfig
 	@echo "Copying $(UBOOT_BUILD)/defconfig to $(UBOOT_CONFIG).defconfig"
 	@cp $(UBOOT_BUILD)/defconfig $(UBOOT_CONFIG).defconfig
 
-uboot-%_defconfig: $(UBOOT_SRC) $(UBOOT_BUILD)
+uboot-%_defconfig: | $(UBOOT_SRC) $(UBOOT_BUILD)
 	@echo " [CONFIG] Configuring from $(patsubst uboot-%,%,$@)"
 	$(UBOOT_CMD) $(patsubst uboot-%,%,$@)
 
