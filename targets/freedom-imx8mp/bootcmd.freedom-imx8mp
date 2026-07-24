@@ -1,0 +1,25 @@
+setenv console 	console=ttymxc1,115200
+setenv root	root=/dev/nfs
+setenv nfsroot nfsroot=/srv/nfs/freedom-imx8mp/nfs/,v4,rsize=65536,wsize=65536,tcp
+
+setenv ip	ip=dhcp
+setenv no_hash_pointers	no_hash_pointers
+
+setenv bootargs ${console} ${cma} ${ip} ${root} ${nfsroot} rw rootwait ${systemd} ${no_hash_pointers}
+
+echo "Kernel command line arguments:"
+printenv bootargs
+
+# Load the kernel/fit image
+# HACK DTB has to be located at an 8-byte offset, and currently the FIT is aligning to 4.
+# Load at a 4 byte offset!
+# oldaddr 0x48000000
+setenv loadaddr 0x58000000
+setenv fdtaddr 0x48000000
+
+tftp ${loadaddr} freedom-imx8mp/Image
+tftp ${fdtaddr} freedom-imx8mp/imx8mp-frdm.dtb
+
+# Boot and Go!
+echo "Booting ..."
+booti ${loadaddr} - ${fdtaddr}

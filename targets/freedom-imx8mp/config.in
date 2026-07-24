@@ -1,0 +1,9 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image.gz
+
+DTB=freescale/imx8mp-frdm.dtb
+
+DEFCONFIG=defconfig
+
+BOOTSCRIPT=bootcmd.freedom-imx8mp.scr
