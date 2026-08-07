@@ -24,3 +24,11 @@ $(eval $(call fram,clubbel,clubbel@lab.linuxembedded.co.uk))
 $(eval $(call fram,visioncb8m,visioncb8m@lab.linuxembedded.co.uk))
 $(eval $(call fram,spacecb,spacecb@lab.linuxembedded.co.uk))
 
+debix-som-images-boot:
+	scp $(LINUX_IMAGES) root@debix-som:/boot/
+
+som: linux debix-som-images-boot
+	ssh -tC root@debix-som "reboot"
+
+
+allnoconfig: linux-allnoconfig linux-fragments
