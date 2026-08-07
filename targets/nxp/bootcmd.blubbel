@@ -31,7 +31,7 @@ tftp ${fdtaddr} blubbel/blubbel.dtb
 setenv bootargs ${console_interface} ${root} ${ip} ${nfsroot} 
 
 #echo "MMC Root Yocto"
-#setenv bootargs ip=off loglevel=8 root=/dev/mmcblk0p2 rw rootfstype=ext4 rootrw=/dev/mmcblk0p3 
+setenv bootargs ${console_interface} ip=off loglevel=8 root=/dev/mmcblk0p2 rw rootfstype=ext4 rootrw=/dev/mmcblk0p3 
 
 # echo "MMC Root"
 # setenv bootargs console=ttymxc0,115200 root=/dev/mmcblk1p2 fsck.repair=yes rootwait rw
