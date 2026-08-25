@@ -22,4 +22,5 @@ $(eval $(call fram,caster,castor@lab.linuxembedded.co.uk))
 $(eval $(call fram,blubbel,blubbel@lab.linuxembedded.co.uk))
 $(eval $(call fram,clubbel,clubbel@lab.linuxembedded.co.uk))
 $(eval $(call fram,visioncb8m,visioncb8m@lab.linuxembedded.co.uk))
+$(eval $(call fram,spacecb,spacecb@lab.linuxembedded.co.uk))
 
