@@ -178,6 +178,14 @@ linux-package: .linux-package-prep dtb linux modules modules_install
 	@cp $(LINUX_DTB_OVERLAYS)	$(LINUX_PKG_INSTALL)/boot/overlays/
 	@tar -C $(LINUX_PKG_INSTALL) -czf $(LINUX_PACKAGE_TGZ) ./
 
+# Build just a debian package for the kernel.
+# kernel headers requires target packages like libssl-dev:arm64
+# and the kernel debug package is large and unnecessary. Don't build those
+# until someone needs them.
+linux-deb: LINUX_BUILD_EXTRA+=DEB_BUILD_PROFILES="pkg.linux-upstream.nokernelheaders pkg.linux-upstream.nokerneldbg"
+linux-deb: linux-bindeb-pkg
+	ls -alh $(BUILDSYS_BUILD)/$(ARCH)/$(TARGET)
+
 kbuild-linux-help:
 	@echo "LINUX_IMAGES		: $(LINUX_IMAGES)"
 	@echo "LINUX_DTBS		: $(LINUX_DTBS)"
