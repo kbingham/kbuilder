@@ -1,0 +1,12 @@
+ARCH:=aarch64
+SUBARCH:=armv8
+LINUX_DEFAULT_TARGET=linux-Image.gz
+
+TARGET_MOD_DIR:=$(ROOTFS)
+NFSROOT=$(ROOTFS)
+
+DTB=qcom/sc8280xp-lenovo-thinkpad-x13s.dtb
+
+DEFCONFIG=defconfig
+
+-include autotools.cross
