@@ -1,0 +1,39 @@
+# setenv ethaddr ce:1f:45:14:74:5c
+# dhcp && source
+
+#setenv bootargs console=ttymxc1,115200 root=/dev/mmcblk1p2 rootwait rw cma=256M
+
+setenv board	frdm95
+
+setenv console 	console=ttyLP0,115200 earlycon
+#setenv earlycon	earlycon=ec_imx6q,0x30a60000,115200
+setenv root	root=/dev/nfs
+setenv nfsroot	nfsroot=/srv/nfs/${board}/,v4,rsize=65536,wsize=65536,tcp
+
+setenv ip	ip=dhcp
+setenv systemd	rd.systemd.show_status=false rd.udev.log_priority=3
+
+setenv no_hash_pointers	no_hash_pointers
+
+# nfsroot defaults to the dhcp server as server IP
+#setenv bootargs ${console} ${cma} root=/dev/nfs ip=dhcp nfsroot=${nfsroot},v3,tcp rw rootwait
+setenv bootargs ${console} ${earlycon} ${cma} ${ip} ${root} ${nfsroot} rw rootwait ${systemd} ${no_hash_pointers}
+
+#setenv bootargs console=ttymxc3,115200 earlycon=ec_imx6q,0x30a60000,115200 root=/dev/mmcblk2p2 rootwait rw
+
+echo "Kernel command line arguments:"
+printenv bootargs
+
+## Split
+tftp ${loadaddr} ${board}/Image
+tftp ${fdt_addr_r} ${board}/${fdtfile}
+
+# Set FDT and apply chosen overlay
+
+#echo "Setting up DTB..."
+#fdt addr 46000000
+#fdt resize 131072
+
+#echo "Booting ..."
+booti ${loadaddr} - ${fdt_addr_r}
+

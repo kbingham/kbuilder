@@ -10,6 +10,7 @@ GDB_ARMGDB_OPTS+=-ex 'b internal_error'
 GDB_ARMGDB_OPTS+=-ex 'b warning'
 
 DTB=freescale/imx8mp-debix-model-a.dtb
+DTB+=freescale/imx95-15x15-frdm.dtb
 
 #DTB+=freescale/imx8mp-evk.dtb
 #DTB+=freescale/imx8mp-isp0.dtbo
