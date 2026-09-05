@@ -145,6 +145,8 @@ defconfig $(LINUX_CONFIG): | $(LINUX_SRC) $(LINUX_BUILD)
 	@echo "Making $(LINUX_CONFIG) from defconfig"
 	$(LINUX_CMD) defconfig
 
+fragment-config: linux-allnoconfig linux-fragments linux-savedefconfig
+
 # Exported Defines for external packages to utilise
 
 # LINUX_DTBS:=$(LINUX_BUILD)/arch/$(LINUX_ARCH)/boot/dts/
